@@ -1,0 +1,49 @@
+---
+/** Home page body — a port of index.ejs. */
+import { site, theme } from "../site.config.js";
+import PostCard from "./PostCard.astro";
+import Pagination from "./Pagination.astro";
+import Card from "./Card.astro";
+
+const { posts, page, total } = Astro.props;
+---
+
+<div id="home-head">
+    <div
+        id="home-background"
+        ref="homeBackground"
+        data-images={theme.background.join(",")}
+    >
+    </div>
+    <div id="home-info">
+        <span class="loop"></span>
+        <span class="loop"></span>
+        <span class="loop"></span>
+        <span class="loop"></span>
+        <span class="info">
+            <div class="wrap">
+                <h1>{site.title}</h1>
+                <h3>{site.subtitle}</h3>
+                <h5>{site.description}</h5>
+            </div>
+        </span>
+    </div>
+</div>
+
+<div
+    id="home-posts-wrap"
+    ref="homePostsWrap"
+    class={theme.card.enable ? undefined : "home-posts-wrap-no-card"}
+>
+    <div id="home-posts">
+        {posts.map((post) => <PostCard post={post} />)}
+        <Pagination page={page} total={total} />
+    </div>
+    {
+        theme.card.enable && (
+            <div id="home-card">
+                <Card />
+            </div>
+        )
+    }
+</div>

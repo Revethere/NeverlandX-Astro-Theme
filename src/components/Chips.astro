@@ -1,0 +1,29 @@
+---
+/**
+ * The tag / category pill row — the shared head of tags.ejs and categories.ejs.
+ * Each pill gets its colour in the browser from data-color-key.
+ */
+const { entries, kind = "tags", activePath } = Astro.props;
+
+const icon = kind === "categories" ? "fa-bookmark" : "fa-tags";
+---
+
+<div class="categories-tags">
+    {
+        entries.map((entry) => (
+            <span>
+                <a
+                    href={entry.href}
+                    class={entry.path === activePath ? "is-active" : undefined}
+                    data-color-key={entry.name}
+                    data-color-prop="var"
+                >
+                    <span class="icon">
+                        <i class={`fa-solid ${icon} fa-fw`} />
+                    </span>{" "}
+                    {entry.name}{" "}
+                </a>
+            </span>
+        ))
+    }
+</div>

@@ -1,0 +1,75 @@
+---
+/** The bar / drawer — a port of menu.ejs. */
+import { site, theme } from "../site.config.js";
+
+const entries = Object.entries(theme.menu);
+---
+
+<div id="menu">
+    <div id="menu-cloud-glow"></div>
+
+    <nav id="desktop-menu">
+        <div id="menu-indicator"></div>
+        <a class="title" href="/">
+            <span>{site.title.toUpperCase()}</span>
+        </a>
+        {
+            entries.map(([key, value]) =>
+                value.children ? (
+                    <div class="menu-group">
+                        <a class="menu-parent" href={value.link}>
+                            <span>{key}</span>
+                        </a>
+                        <div class="menu-sub">
+                            <div class="menu-sub-indicator" />
+                            {Object.entries(value.children).map(([childKey, child]) => (
+                                <a href={child.link}>{childKey}</a>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <a href={value.link}>
+                        <span>{key}</span>
+                    </a>
+                )
+            )
+        }
+    </nav>
+
+    <nav id="mobile-menu">
+        <div class="title">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;{site.title.toUpperCase()}</span>
+        </div>
+        <div class="items" style="display: none">
+            {
+                entries.map(([key, value]) => (
+                    <>
+                        <a href={value.link}>
+                            <div class="item">
+                                <div style="min-width: 20px; max-width: 50px; width: 10%">
+                                    <i class={`fa-${value.theme} fa-${value.name} fa-fw`} />
+                                </div>
+                                <div style="min-width: 100px; max-width: 150%; width: 20%">
+                                    {key}
+                                </div>
+                            </div>
+                        </a>
+                        {value.children &&
+                            Object.entries(value.children).map(([childKey, child]) => (
+                                <a class="item-child" href={child.link}>
+                                    <div class="item">
+                                        <div style="min-width: 20px; max-width: 50px; width: 10%" />
+                                        <div style="min-width: 100px; max-width: 150%; width: 20%">
+                                            {childKey}
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
+                    </>
+                ))
+            }
+        </div>
+    </nav>
+</div>
+<div id="menu-curtain" style="display: none"></div>

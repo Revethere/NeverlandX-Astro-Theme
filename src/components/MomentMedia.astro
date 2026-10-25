@@ -1,0 +1,28 @@
+---
+/**
+ * One shared link inside a moment: a square cover on the left, the title and a
+ * small metadata line on the right. Deliberately small — it is a footnote to the
+ * note above it, not a player: everything links out to the source.
+ *
+ * A cover is drawn only when the cache (or YouTube's id-only image URL) has one;
+ * otherwise the same square becomes a quiet icon tile so the row keeps its shape.
+ */
+const { media } = Astro.props;
+const icon = media.kind === "music" ? "fa-music" : "fa-play";
+---
+
+<a class="moment-media" href={media.href} target="_blank" rel="noopener">
+    {
+        media.cover ? (
+            <img class="moment-media-cover" src={media.cover} alt="" loading="lazy" referrerpolicy="no-referrer" />
+        ) : (
+            <span class="moment-media-cover is-empty">
+                <i class={`fa-solid ${icon}`} aria-hidden="true" />
+            </span>
+        )
+    }
+    <span class="moment-media-body">
+        <span class="moment-media-title">{media.title}</span>
+        {media.meta && <span class="moment-media-meta">{media.meta}</span>}
+    </span>
+</a>

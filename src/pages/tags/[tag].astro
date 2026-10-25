@@ -1,0 +1,28 @@
+---
+/** One tag's posts — the page the tag pills link to. */
+import Base from "../../layouts/Base.astro";
+import Chips from "../../components/Chips.astro";
+import Timeline from "../../components/Timeline.astro";
+import { site } from "../../site.config.js";
+import { getTags, sortByDateDesc } from "../../lib/content.js";
+
+export function getStaticPaths() {
+    return getTags().map((tag) => ({
+        params: { tag: tag.path.replace(/^\/tags\//, "").replace(/\/$/, "") },
+        props: { tag },
+    }));
+}
+
+const { tag } = Astro.props;
+const tags = getTags();
+const posts = sortByDateDesc(tag.posts);
+
+const title = `Tags: ${tag.name} | ${site.title}`;
+---
+
+<Base type="tags" title={title}>
+    <div id="archives">
+        <Chips entries={tags} kind="tags" activePath={tag.path} />
+        <Timeline posts={posts} variant="static" />
+    </div>
+</Base>

@@ -1,0 +1,3231 @@
+#archives {
+    margin: auto;
+    margin-top: 100px;
+    padding: 20px;
+}
+#archives .categories-tags {
+    margin: auto;
+    margin-bottom: 50px;
+    max-width: 900px;
+    text-align: center;
+    width: 100%;
+}
+#archives .categories-tags span {
+    display: inline-block;
+    margin: 10px;
+}
+#archives .categories-tags span .icon {
+    color: inherit;
+    margin-left: 0;
+    margin-right: 8px;
+    opacity: 0.75;
+}
+/* A wash of the tag's own hue, not a fill: the palette's five hues are saturated
+   enough that a solid chip turns the page into a colour chart, and at this size
+   the fill was doing more shouting than the names in it.
+   The pill is the hue kept pale, with white poured into its middle — a radial
+   overlay that is opaque at the centre and gone by the rim — so the colour reads
+   as belonging to the chip's edge rather than as a background behind the word.
+   The overlay is its own layer so hover can animate the base colour: a gradient
+   in `background` cannot be interpolated, and the fill would have snapped.
+   The type keeps the hue but pulled toward the ink, because the palette's
+   lighter hues measure under 2:1 on white.
+   colors.js publishes the colour as --tag-c (`data-color-prop="var"` in the
+   markup) and everything here is derived from it, so one hue drives fill, rim
+   and ink and no rule has to know which of the five it got. */
+#archives .categories-tags span a {
+    background: color-mix(in srgb, var(--tag-c) 24%, #fff);
+    border: 1px solid color-mix(in srgb, var(--tag-c) 38%, transparent);
+    border-radius: 999px;
+    color: color-mix(in srgb, var(--tag-c) 62%, #1e3e3f);
+    font-weight: 600;
+    isolation: isolate;
+    overflow: hidden;
+    padding: 9px 16px 9px 13px;
+    position: relative;
+    transition: background 0.25s, border-color 0.25s, color 0.25s, box-shadow 0.25s;
+}
+#archives .categories-tags span a::before {
+    background: radial-gradient(140% 170% at 50% 50%, #fff 0%, rgba(255, 255, 255, 0.78) 45%, rgba(255, 255, 255, 0) 100%);
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: -1;
+}
+/* Hover: the wash deepens by one step, not two. It used to jump to 36% of the hue
+   with the ink pulled to 48%, which on the two pink hues landed as a solid rose
+   block under the pointer — the pill went from a tint to a fill and read heavier
+   than the tag you were actually on. Now the rim does most of the work (38 → 46)
+   and the fill only lifts a little (24 → 30), so the pill answers the pointer
+   without darkening. */
+#archives .categories-tags span a:hover {
+    background: color-mix(in srgb, var(--tag-c) 36%, #fff);
+    border-color: color-mix(in srgb, var(--tag-c) 58%, transparent);
+    box-shadow: 0 4px 14px -8px color-mix(in srgb, var(--tag-c) 70%, transparent);
+    color: color-mix(in srgb, var(--tag-c) 48%, #1e3e3f);
+}
+/* The tag being looked at: the same wash, held deeper, with the hue let one step
+   further into the type. No ring — the whole chip is already one. */
+#archives .categories-tags span a.is-active {
+    background: color-mix(in srgb, var(--tag-c) 44%, #fff);
+    border-color: color-mix(in srgb, var(--tag-c) 62%, transparent);
+    color: color-mix(in srgb, var(--tag-c) 44%, #1e3e3f);
+}
+#archives .category,
+#archives .tags .tag,
+.article .info .category,
+.article .info .tags,
+.article .info .tags .tag {
+    display: inline-block;
+    margin-right: 10px;
+}
+#archives h3 {
+    font-size: 19px;
+    margin: 6px 0 10px;
+}
+#archives .item-time {
+    color: #8aa0a4;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+/* `outdated: true` in a post's front matter keeps it out of the home, tag and
+   category listings; the archive is the one list it still shows in, so this
+   badge is how it announces itself there. Deliberately grey and small: the post
+   is still readable and searchable, the badge is a caution, not a warning. */
+#archives .timeline .outdated-badge {
+    background: #eceff0;
+    border-radius: 999px;
+    color: #8a979b;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+    margin-left: 10px;
+    padding: 1px 9px;
+    text-transform: uppercase;
+    vertical-align: 1px;
+}
+#logs {
+    margin: auto;
+    margin-top: 100px;
+    padding: 20px;
+}
+#logs h1 {
+    margin-bottom: 40px;
+    text-align: center;
+}
+#logs .logs-list {
+    margin: auto;
+    max-width: 750px;
+}
+#logs .log-entry {
+    align-items: flex-start;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    gap: 30px;
+    padding: 24px 0;
+}
+#logs .log-entry:first-child {
+    border-top: 1px solid #e0e0e0;
+}
+#logs .log-date {
+    color: #5c6b72;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 4px;
+    padding-top: 2px;
+    text-align: right;
+    width: 110px;
+}
+#logs .log-date-text {
+    color: #1e3e3f;
+    font-size: 15px;
+    font-weight: 700;
+}
+#logs .log-tagline {
+    color: #999;
+    font-size: 12px;
+    font-style: italic;
+}
+#logs .log-content {
+    flex: 1;
+    min-width: 0;
+}
+#logs .log-content p {
+    margin: 4px 0;
+    line-height: 1.7;
+}
+#logs .log-content ul,
+#logs .log-content ol {
+    margin: 4px 0;
+    padding-left: 18px;
+}
+#logs .log-content li {
+    margin: 3px 0;
+    line-height: 1.7;
+}
+/* ── moments ──────────────────────────────────────────────────────────────
+   A WeChat-style stream, in the logs page's clothes: hairline-separated entries
+   and no card shell. The time sits at the bottom of each entry with an optional
+   location beside it, and a single masthead carries the avatar so the rows
+   themselves stay quiet.
+
+   The gallery shape comes from how many images sit between two paragraphs (see
+   lib/moments.js): one image keeps its own ratio, two read 2-up, three 3-up,
+   four as a 2×2 block, five or more fill rows of three. Everything except the
+   single image is cropped square, the way WeChat crops its grid. */
+#moments {
+    margin: auto;
+    margin-top: 100px;
+    padding: 20px;
+}
+#moments .moments-column {
+    margin: auto;
+    max-width: 750px;
+}
+#moments .moments-stream {
+    max-width: 750px;
+}
+#moments .moments-head {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+    padding: 0 0 26px;
+}
+#moments .moments-avatar {
+    border-radius: 50%;
+    flex-shrink: 0;
+    height: 54px;
+    object-fit: cover;
+    width: 54px;
+}
+#moments .moments-name {
+    color: #1e3e3f;
+    font-size: 16px;
+    font-weight: 700;
+}
+#moments .moments-note {
+    color: #8a979b;
+    font-size: 12px;
+    margin-top: 3px;
+}
+#moments .moment {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 24px 0;
+}
+#moments .moment:first-of-type {
+    border-top: 1px solid #e0e0e0;
+}
+#moments .moment-body {
+    display: flex;
+    gap: 14px;
+}
+/* Only rendered when theme.moments.entryAvatar is on. */
+#moments .moment-avatar {
+    border-radius: 50%;
+    flex-shrink: 0;
+    height: 40px;
+    object-fit: cover;
+    width: 40px;
+}
+#moments .moment-content {
+    flex: 1;
+    min-width: 0;
+}
+#moments .moment-content p {
+    font-size: 15px;
+    line-height: 1.78;
+    margin: 0 0 10px;
+}
+#moments .moment-content p:last-child,
+#moments .moment-content ul:last-child,
+#moments .moment-content ol:last-child {
+    margin-bottom: 0;
+}
+#moments .moment-content ul,
+#moments .moment-content ol {
+    margin: 0 0 10px;
+    padding-left: 18px;
+}
+#moments .moment-content li {
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 3px 0;
+}
+#moments .moment-images {
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+    /* The image box and the text box share a left edge, but a rounded corner
+       reads as if it bulges outward, so the gallery is inset by a hair to line
+       up with the first glyph instead of the em box. */
+    margin: 0 0 10px 4px;
+    /* Tiles are sized, not the row: a 2-up grid would otherwise stretch each
+       image to 264px and dwarf the 3-up ones. The component sets --tile to a hair
+       over the 3-up width, so every grid reads as the same scale. */
+    max-width: calc(var(--cols, 3) * var(--tile, 176px) + (var(--cols, 3) - 1) * 6px);
+}
+#moments .moment-images img {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    cursor: zoom-in;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+/* One image is the only case WeChat does not crop. */
+#moments .moment-images.is-single {
+    display: block;
+    max-width: 62%;
+}
+#moments .moment-images.is-single img {
+    aspect-ratio: auto;
+    border-radius: 10px;
+    height: auto;
+    max-height: 420px;
+    max-width: 100%;
+    object-fit: contain;
+    width: auto;
+}
+#moments .moment-meta {
+    /* Baseline, not the default stretch: the place is an inline-block, and a
+       stretched flex item centres its text, which dropped "上海 · 徐汇" 2px below
+       the time. Baselines line the two up whatever the icon's metrics are. */
+    align-items: baseline;
+    color: #8a979b;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 12px;
+    gap: 4px 14px;
+    margin-top: 12px;
+}
+#moments .moment-place {
+    display: inline-block;
+    white-space: nowrap;
+}
+#moments .moment-place i {
+    font-size: 11px;
+    margin-right: 5px;
+}
+/* A shared link: cover, title, one line of counts. Kept small on purpose — it is
+   a footnote to the note above it, not a player; the whole row links out. */
+#moments .moment-media {
+    align-items: center;
+    border: 1px solid #ececec;
+    border-radius: 12px;
+    color: inherit;
+    display: flex;
+    gap: 12px;
+    margin: 0 0 10px 4px;
+    max-width: 380px;
+    padding: 8px;
+    text-decoration: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+#moments .moment-media:hover {
+    border-color: #e2d7ea;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04), 0 10px 26px rgba(146, 116, 176, 0.12);
+}
+#moments .moment-media-cover {
+    border-radius: 8px;
+    flex-shrink: 0;
+    height: 64px;
+    object-fit: cover;
+    width: 64px;
+}
+/* An uncached link keeps the row's shape with a quiet icon instead of a photo. */
+#moments .moment-media-cover.is-empty {
+    align-items: center;
+    background: #f4f2f6;
+    color: #b9bcc4;
+    display: flex;
+    font-size: 18px;
+    justify-content: center;
+}
+#moments .moment-media-body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+#moments .moment-media-title {
+    display: -webkit-box;
+    font-size: 14px;
+    line-height: 1.45;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+#moments .moment-media-meta {
+    color: #8a979b;
+    font-size: 11.5px;
+}
+/* At desktop width the stream sits dead centre and reads left-heavy against the
+   empty right half, so the column starts right of centre. The masthead keeps the
+   same relative position, which means the avatar travels with it: one lean for
+   the whole page, not a text block sliding out from under its own header. */
+@media (min-width: 901px) {
+    #moments .moments-column {
+        /* Relative offset, not padding: the column keeps its 750px width and
+           simply leans right, so the text does not get narrower. */
+        left: 52px;
+        position: relative;
+    }
+    #moments .moments-head {
+        left: -18px;
+        position: relative;
+    }
+}
+/* A month index beside the timeline. It is pinned rather than dropped into the
+   column because the stream is 750px wide no matter the window: the entries stay
+   put, and the index sits a step to their right instead of drifting to the edge
+   of the screen. 50% + 449px is the stream's right edge plus the gap; 125px puts
+   the 44px button on the masthead avatar's centre line at the top of the page. */
+#moments .moments-calendar {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    left: calc(50% + 449px);
+    position: fixed;
+    top: 125px;
+    z-index: 30;
+}
+#moments .moments-calendar-toggle {
+    align-items: center;
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    background: rgba(255, 255, 255, 0.62);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.07);
+    color: #4a5a5c;
+    cursor: pointer;
+    display: flex;
+    height: 44px;
+    justify-content: center;
+    transition: color 0.2s, box-shadow 0.3s, transform 0.3s;
+    width: 44px;
+}
+#moments .moments-calendar-toggle:hover {
+    color: #1e3e3f;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.07),
+        0 14px 34px rgba(146, 116, 176, 0.14);
+    transform: translate(-1px, -1px);
+}
+#moments .moments-calendar.is-open .moments-calendar-toggle {
+    color: #1e3e3f;
+}
+#moments .moments-calendar-panel {
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    background: rgba(255, 255, 255, 0.62);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 10px 30px rgba(0, 0, 0, 0.06);
+    /* Collapsed by height so the list unrolls downwards rather than popping. */
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 14px;
+    transition: max-height 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease,
+        padding 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+    width: 104px;
+}
+#moments .moments-calendar.is-open .moments-calendar-panel {
+    max-height: 62vh;
+    opacity: 1;
+    overflow-y: auto;
+    padding: 12px 14px;
+}
+#moments .moments-calendar-year + .moments-calendar-year {
+    margin-top: 10px;
+}
+#moments .moments-calendar-year-label {
+    color: #1e3e3f;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 2px 2px 4px;
+}
+#moments .moments-calendar-month {
+    border-radius: 8px;
+    color: #5d6b6d;
+    display: block;
+    font-size: 13px;
+    padding: 5px 6px;
+    transition: background 0.2s, color 0.2s;
+}
+#moments .moments-calendar-month:hover {
+    background: rgba(146, 116, 176, 0.1);
+    color: #1e3e3f;
+}
+/* Below this the index would sit in the last 40px of the window, so it folds into
+   the column instead of hugging the edge of the screen. */
+@media (max-width: 1260px) {
+    #moments .moments-calendar {
+        left: auto;
+        margin: 0 0 6px 4px;
+        position: static;
+    }
+    #moments .moments-calendar-panel {
+        width: 100%;
+    }
+    #moments .moments-calendar.is-open .moments-calendar-panel {
+        max-height: 48vh;
+    }
+}
+#friends {
+    margin: auto;
+    margin-top: 100px;
+    padding: 20px;
+}
+#friends h1 {
+    margin-bottom: 30px;
+    text-align: center;
+}
+#friends .friend-list {
+    margin: auto;
+    max-width: 900px;
+}
+#friends .friend-card {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.03),
+        0 3px 10px rgba(0, 0, 0, 0.05),
+        0 10px 30px rgba(0, 0, 0, 0.06);
+    display: flex;
+    margin-bottom: 20px;
+    padding: 25px 30px;
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+#friends .friend-card:hover {
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.04),
+        0 6px 20px rgba(0, 0, 0, 0.08),
+        0 16px 48px rgba(155, 187, 247, 0.18);
+    transform: translate(-3px, -3px);
+    border-color: rgba(155, 187, 247, 0.25);
+}
+#friends .friend-avatar {
+    flex-shrink: 0;
+    height: 80px;
+    margin-right: 25px;
+    width: 80px;
+}
+#friends .friend-avatar img {
+    border: #f1f1f1 solid 3px;
+    border-radius: 50%;
+    height: 100%;
+    transition: transform 0.5s;
+    width: 100%;
+}
+#friends .friend-avatar:hover img {
+    transform: rotate(360deg);
+}
+#friends .friend-info {
+    flex: 1;
+    min-width: 0;
+}
+#friends .friend-name {
+    color: #1e3e3f;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+#friends .friend-name:hover {
+    color: #dfa4c9;
+}
+#friends .friend-desc {
+    color: #5c6b72;
+    font-size: 14px;
+    line-height: 1.6;
+}
+#friends .friend-go {
+    /* Was a blue-to-pink wedge with one square corner and a pink glow — the only
+       two-hue gradient left on the site, and a third accent family in a card that
+       already has the name and the description to carry. A pill in the menu's
+       lavender says "this opens something" with one colour instead of three. */
+    background: rgba(204, 164, 227, 0.16);
+    border: 1px solid rgba(204, 164, 227, 0.36);
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(146, 116, 176, 0.12);
+    color: #7b5c9b;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 20px;
+    padding: 9px 20px;
+    transition: background 0.25s ease-out, border-color 0.25s ease-out,
+        box-shadow 0.25s ease-out, color 0.25s ease-out;
+    white-space: nowrap;
+}
+#friends .friend-go span {
+    margin-left: 6px;
+}
+#friends .friend-go:hover {
+    background: rgba(204, 164, 227, 0.3);
+    border-color: rgba(204, 164, 227, 0.55);
+    box-shadow: 0 6px 18px rgba(146, 116, 176, 0.2);
+    color: #6b4d8a;
+}
+#friends .friend-empty {
+    color: #5c6b72;
+    margin-top: 50px;
+    text-align: center;
+}
+#crypto {
+    margin: 50px 0;
+}
+#crypto.failure {
+    border-color: #ea4a5a;
+    color: #ea4a5a;
+}
+#crypto.failure:focus {
+    box-shadow: 0 0 0 3px #ea4a5a4d;
+}
+#crypto.success {
+    border-color: #34d058;
+    color: #34d058;
+}
+#footer {
+    font-size: 14px;
+    margin-top: 150px;
+    padding-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+#footer #footer-icon {
+    color: #dfa4c9;
+    display: inline-block;
+    font-size: 18px;
+    margin: 0 10px;
+}
+#footer #footer-wrap {
+    border-top: 1px solid #aaa;
+    color: #5c6b72;
+    margin: auto;
+    width: 900px;
+}
+#footer #footer-wrap div {
+    margin: 15px;
+}
+#home-card {
+    width: 300px;
+}
+#home-card #card-style {
+    /* Opaque for the same reason the post cards are; see #home-posts .post.
+       Shadow, rim, radius and lift are the post cards' recipe too — the two card
+       types sit side by side, so they share one look in both states. */
+    background: #fff;
+    border: 1px solid var(--page-bg);
+    border-radius: 20px;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.03),
+        0 3px 10px rgba(0, 0, 0, 0.05),
+        0 10px 30px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    justify-content: center;
+    overflow: auto;
+    position: sticky;
+    text-align: center;
+    top: 10vh;
+    width: 300px;
+    transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+}
+#home-card #card-style:hover {
+    /* Same recipe as the post cards (#home-posts .post:hover): the deeper purple
+       shadow, a 2px lift and a rim that darkens to --tint-deep. The card used to
+       lift 3px with a blue-tinted shadow and no rim, so the two card types on the
+       home page read as different components under the pointer. */
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.04),
+        0 6px 20px rgba(0, 0, 0, 0.07),
+        0 18px 46px rgba(146, 116, 176, 0.16);
+    transform: translate(-2px, -2px);
+    border-color: var(--tint-deep);
+}
+#home-card #card-div {
+    overflow: auto;
+    padding: 25px 0;
+}
+#home-card #card-div .avatar {
+    border: #f1f1f1 solid 3px;
+    border-radius: 50%;
+    height: 140px;
+    margin: auto;
+    text-align: center;
+    width: 140px;
+}
+#home-card #card-div .avatar img {
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+}
+#home-card #card-div .avatar:hover img {
+    transform: rotate(360deg);
+}
+#home-card #card-div .description {
+    margin: 20px auto;
+    width: 85%;
+}
+#home-card #card-div .friend-links .friend-link {
+    margin-bottom: 5px;
+}
+#home-card #card-div .friend-links a {
+    border-radius: 5px;
+    color: #5c6b72;
+    display: block;
+    padding: 8px 0;
+}
+#home-card #card-div .icon-links .icon-link {
+    margin: 5px;
+}
+#home-card #card-div .icon-links a {
+    border-radius: 5px;
+    color: #5c6b72;
+    font-size: 18px;
+    padding: 5px;
+}
+#home-card #card-div .icon-links a:hover,
+#home-card #card-div .friend-links a:hover,
+#home-posts .page-current .page-num:hover {
+    background: #cca4e3;
+    color: #fff;
+}
+#home-card #card-div .stat-item {
+    display: inline-block;
+    margin: 5px 15px;
+    text-align: center;
+}
+#home-card #card-div .stat-num {
+    color: #1e3e3f;
+    display: block;
+    font-size: 18px;
+    font-weight: 400;
+}
+#home-card #card-div .stat-label {
+    color: #5c6b72;
+    font-size: 12px;
+}
+#home-card #card-div .icon-links,
+#home-card #card-div .friend-links,
+#home-card #card-div .statistics {
+    border-top: #cdcdcd solid 1px;
+    margin: 10px auto;
+    padding-top: 10px;
+    width: 85%;
+}
+#home-card #card-div .name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px auto;
+}
+#home-head {
+    /* The wallpaper runs past the bottom of the hero and finishes dissolving
+       *below* the fold, so the hero/posts seam never cuts the fade off — the
+       seam is not a line anywhere in the dissolve. The tail ends up behind the
+       posts column, where the page content covers most of it.
+       --hero-bleed       how far the wallpaper overhangs the fold
+       --hero-fade-band   length of the dissolve, measured along the wallpaper.
+                          It lands on --tint-deep, which is deeper than the page
+                          is, so it stops short of the page colour.
+       --hero-settle-band the tail below that, over which the deeper colour
+                          gives way to the page colour. It runs entirely below
+                          the fold and is what keeps the two colours from meeting
+                          at a line: by the time the wallpaper's own bottom edge
+                          arrives, the page colour is already covering it.
+       --hero-blur-band   how far up the progressive blur starts.
+       Both bands hang off the bottom of the wallpaper, so --hero-bleed is what
+       moves the whole dissolve up and down; it does not change how long it is.
+       --hero-bleed is not free: it has to sit the fold exactly half way through
+       the fade, which is what keeps the dissolve's slope the same either side of
+       the fold. That is --hero-bleed = 2 * --hero-settle-band + --hero-fade-band.
+       Change a band and this has to follow, or the fold lands on a steeper part
+       of the ramp and the seam reads as a bruise.
+       The lengths also set how steep the dissolve is, since the distance it
+       covers does not change: halving them doubles the slope. home.js matches
+       --tint-deep to whatever ratio --hero-fade-band / --hero-settle-band says,
+       so trimming them together keeps that match — trimming one alone breaks it. */
+    --hero-bleed: 16vh;
+    --hero-blur-band: 7vh;
+    --hero-fade-band: 8vh;
+    --hero-settle-band: 4vh;
+    /* Ramps in over --hero-blur-band, then *holds* at full strength down to the
+       bottom of the wallpaper. The hold is what keeps the overhang consistent:
+       the wallpaper keeps going past the fold, and a blur that stopped at the
+       fold would leave the overhang visibly sharper than the part above it. */
+    --hero-blur-mask: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000 calc(100% - var(--hero-bleed) / 2));
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+#home-head #home-background {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* Grown past the hero and pulled up by half the overhang, so the framing
+       stays centred and only the bottom edge moves. */
+    height: calc(100vh + var(--hero-bleed));
+    left: 0;
+    position: absolute;
+    top: calc(var(--hero-bleed) / -2);
+    width: 100vw;
+    z-index: -1;
+}
+/* The dissolve is a layer poured over the wallpaper — not a white wash, and not
+   a mask cutting the wallpaper out. It paints inside the wallpaper's box, so it
+   runs past the fold exactly as far as the wallpaper does.
+   Three stops, because the colour it lands on is no longer the colour the page
+   is: it dissolves into --tint-deep, holds that through the part you can see,
+   then trades it for --page-bg over the settle band. Both are set from one
+   sampled hue by home.js, so the difference between them is depth, not hue. */
+#home-head #home-background::after {
+    /* Linear, deliberately. An eased ramp bunches the whole change into its
+       middle — and the middle is the only part you can see. Spreading it evenly
+       and letting the tail run past the fold keeps the visible slope shallow. */
+    background: linear-gradient(
+        to bottom,
+        transparent calc(100% - var(--hero-fade-band) - var(--hero-settle-band)),
+        var(--tint-deep) calc(100% - var(--hero-settle-band)),
+        var(--page-bg) 100%
+    );
+    content: "";
+    inset: 0;
+    position: absolute;
+}
+/* Bottom edge of the hero, blurred in two passes. Both overhang the fold by the
+   same amount as the wallpaper and are taller by exactly that much, so the mask
+   still finishes ramping at the fold and then holds — the overhang keeps the
+   same amount of blur as the part above it. */
+#home-head::before,
+#home-head::after {
+    bottom: calc(var(--hero-bleed) / -2);
+    content: "";
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+/* Wide, gentle pass: softens the whole band. */
+#home-head::before {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    height: calc(var(--hero-blur-band) + var(--hero-bleed) / 2);
+    mask-image: var(--hero-blur-mask);
+    -webkit-mask-image: var(--hero-blur-mask);
+}
+/* Tighter, stronger pass: melts what the wallpaper still shows down here. */
+#home-head::after {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    height: calc(var(--hero-blur-band) * 0.55 + var(--hero-bleed) / 2);
+    mask-image: var(--hero-blur-mask);
+    -webkit-mask-image: var(--hero-blur-mask);
+}
+#home-head #home-info .info {
+    align-items: center;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+/* The four blobs turning behind the title: veils over the wallpaper, and no
+   filter behind them at all. Nothing is blurred and nothing is desaturated, so
+   what shows through is the wallpaper itself with a wash over it, and how much
+   of the shape reads is the fill alpha and nothing else. That alpha is also the
+   one knob here with a real cost: it is what hides the wallpaper, so raising it
+   buys presence with the background.
+   The wash is tinted, not white. Its hue is the wallpaper's own, read off the
+   whole picture rather than the bottom slice --page-bg is matched to — the rings
+   sit over its middle, and what they should echo is the picture itself — and
+   each ring takes a small step either side of that hue, so the four read as
+   several colours instead of one flat tone without any of them leaving the
+   family the page is already in. home.js publishes that hue and its chroma per
+   ring; the lightness and alpha here decide how much wallpaper they hide, and
+   that pair is the one to move if the rings want to be more or less present.
+   The fill is set light on purpose: it is a wash that the wallpaper shows
+   through, and at 92% it is close enough to the page colour that the disc reads
+   as the wallpaper's own tone rather than as a colour laid over it. Raising its
+   saturation or dropping its lightness is what makes it announce itself, so
+   those are the numbers to leave alone. This is only the fill — softening the
+   rim as well is what costs the shape, since the rim is what draws the rings.
+   Left at zero — the fallback when the sample never arrives, on a wallpaper
+   served from another origin — the rings come out the neutral veil they have
+   always been.
+   A wash does lift the region's light a little — light is light, there is no
+   pigment that does not. If that lift reads as glare, the move that cancels it
+   without blurring anything is `brightness(< 1)` on the backdrop: dimming what
+   is behind the wash pulls the average back down while the wash keeps its hue,
+   and brightness alone costs no sharpness. It is not set here because the veil
+   is still thin enough that the lift is small.
+   The filter is gone on purpose rather than by omission. It was tried at blur
+   1, 3, 9 and 40px, with saturate and brightness rides on top, and everything it
+   offered was either a haze laid over the wallpaper (any blur) or a change to
+   its colour (saturate, brightness) — none of which is what this wants to be.
+   The rim carries the shape at this fill, so it sits a step darker than the
+   wash and much more opaque, and it has to hold against light wallpapers as well
+   as dark ones.
+   Leaving the filter off also makes these much cheaper: the four rotate forever,
+   and each one used to re-sample the wallpaper behind it every frame. */
+#home-head #home-info .loop {
+    background: hsla(var(--loop-h, 0), var(--loop-s, 0%), 92%, 0.15);
+    border: 1px solid hsla(var(--loop-h, 0), var(--loop-s, 0%), 88%, 0.55);
+    border-radius: 38% 62% 63% 37%/41% 44% 56% 59%;
+    box-shadow: inset 0 1px 0 hsla(var(--loop-h, 0), var(--loop-s, 0%), 96%, 0.55);
+}
+#home-head #home-info .loop:nth-child(1) {
+    --loop-h: var(--loop-1-h, 0);
+    --loop-s: var(--loop-1-s, 0%);
+    animation: loop1 10s linear infinite;
+    opacity: 0.9;
+    transform: rotate(30deg);
+}
+#home-head #home-info .loop:nth-child(2) {
+    --loop-h: var(--loop-2-h, 0);
+    --loop-s: var(--loop-2-s, 0%);
+    animation: loop2 15s linear infinite;
+    opacity: 1;
+    transform: rotate(60deg);
+}
+#home-head #home-info .loop:nth-child(3) {
+    --loop-h: var(--loop-3-h, 0);
+    --loop-s: var(--loop-3-s, 0%);
+    animation: loop3 10s linear infinite;
+    opacity: 0.9;
+    transform: rotate(90deg);
+}
+#home-head #home-info .loop:nth-child(4) {
+    --loop-h: var(--loop-4-h, 0);
+    --loop-s: var(--loop-4-s, 0%);
+    animation: loop4 15s linear infinite;
+    opacity: 1;
+    transform: rotate(120deg);
+}
+#home-head #home-info,
+#home-posts {
+    margin: auto;
+}
+#home-posts .page-current {
+    align-items: center;
+    display: flex;
+    font-weight: bold;
+    justify-content: center;
+    margin-top: 50px;
+    text-align: center;
+    width: 100%;
+}
+#home-posts .page-current .current {
+    background: rgba(133, 186, 192, 0.16);
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px rgba(133, 186, 192, 0.35);
+    color: #1e3e3f;
+    display: inline-block;
+    height: 35px;
+    line-height: 35px;
+    margin: 0 7px;
+    padding: 5px;
+    width: 35px;
+}
+#home-posts .page-current .page-num,
+#home-posts .page-current .page-omit {
+    border-radius: 999px;
+    display: inline-block;
+    height: 35px;
+    line-height: 35px;
+    margin: 0 7px;
+    padding: 5px;
+    transition: background 0.25s, color 0.25s;
+    width: 35px;
+}
+#home-posts .page-current .page-num:hover {
+    background: rgba(133, 186, 192, 0.1);
+}
+#home-posts .page-current a {
+    color: #999;
+}
+#home-posts .post {
+    /* Opaque on purpose. The excerpts carry images on white backgrounds, and on
+       a translucent card every one of those read as a white box pasted onto it:
+       the tint left in the card was nowhere near enough to hide the seam.
+       A real frost is off the table on an opaque fill — backdrop-filter has
+       nothing left to show through — so the card keeps the page's own colour in
+       its rim instead of a rim of its own invention, and the shadows stay
+       neutral. */
+    background: #fff;
+    border: 1px solid var(--page-bg);
+    border-radius: 20px;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.03),
+        0 3px 10px rgba(0, 0, 0, 0.05),
+        0 10px 30px rgba(0, 0, 0, 0.06);
+    position: relative; /* anchors the collapse arrow to the card corner */
+    transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+}
+#home-posts .post .category-and-date {
+    color: #5c6b72;
+    margin-top: 15px;
+    text-align: center;
+    width: 100%;
+}
+#home-posts .post .category-and-date .category {
+    display: inline-block;
+    margin-right: 25px;
+}
+#home-posts .post .category-and-date .category a,
+#archives a,
+#archives .tag-icon,
+#archives .item-time,
+.article .info a {
+    color: #5c6b72;
+}
+#home-posts .post .category-and-date .date,
+#archives .tags,
+#menu #desktop-menu a span {
+    display: inline-block;
+}
+#home-posts .post .category-and-date .special {
+    display: inline-block;
+    margin-left: 25px;
+}
+#home-posts .post .more-center {
+    align-items: center;
+    /* The original white, which on an opaque white card is white on white — the
+       fill is here for the hit area its padding buys. What shows the button its
+       own shape is the shadow it sits in, so this one has to stay. */
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    /* The site's accent shadows are this one purple, at three alphas: 0.14 on the
+       MORE pill and the menu indicator, 0.22 on their hover states, 0.12 on the
+       collapse arrow, the mobile menu's hover and the Contents panel. They were
+       rgba(99, 130, 200, …) — a blue the palette has no other source for.
+       The channels are deeper than the accent purple (#cca4e3) on purpose:
+       luminance is what a shadow is made of, and at this lightness the accent
+       colour would have come out at half the weight and left the cards looking
+       flat. 146,116,176 measures 0.217 against the blue's 0.228, so every
+       existing shadow keeps the depth it had and only the hue moves. */
+    box-shadow: 0 2px 18px rgba(146, 116, 176, 0.14);
+    color: #85bac0; /* matches .post-title */
+    cursor: pointer;
+    display: flex;
+    font-size: 12px;
+    font-weight: 700;
+    gap: 6px;
+    justify-content: center;
+    letter-spacing: 2px;
+    margin: 14px auto 0;
+    padding: 6px 22px;
+    transition: background 0.3s, box-shadow 0.3s, color 0.3s, transform 0.3s;
+    width: fit-content;
+}
+#home-posts .post .more-center:hover {
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 4px 20px rgba(146, 116, 176, 0.22);
+    color: #6799a0; /* slightly deeper teal, in step with the shadow */
+    transform: translateY(-1px);
+}
+#home-posts .post .more-center .more-icon {
+    /* back-out spring: overshoots 180° slightly, then settles — transform-only,
+       so it rides the compositor and never forces layout. */
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#home-posts .post .more-center.expanded .more-icon {
+    transform: rotate(180deg);
+}
+/* Collapse arrow pinned to the card's top-right corner — only appears while
+   the post is expanded, so long articles can be collapsed without scrolling. */
+#home-posts .post .collapse-arrow {
+    /* the pill's recipe — see #home-posts .post .more-center */
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    box-shadow: 0 2px 18px rgba(146, 116, 176, 0.14);
+    color: #85bac0; /* matches .post-title */
+    cursor: pointer;
+    display: flex;
+    font-size: 12px;
+    height: 30px;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    transform: scale(0.85);
+    transition: background 0.3s, box-shadow 0.3s, color 0.3s, opacity 0.3s ease,
+        transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 30px;
+    z-index: 2;
+}
+#home-posts .post .description.expanded ~ .collapse-arrow {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+#home-posts .post .collapse-arrow:hover {
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 4px 20px rgba(146, 116, 176, 0.22);
+    color: #6799a0; /* slightly deeper teal on hover */
+}
+#home-posts .post .description {
+    /* The excerpt fades out through a mask on the text, not a white overlay.
+       An overlay stacks a second white on top of the 0.72 the card already
+       paints, so the bottom of every card read as opaque white while its top
+       still let the wallpaper through. Taking the text away instead leaves the
+       card's own glass, which stays translucent all the way down.
+       Both ends are two-stop ramps over the same colours, so the mask can
+       interpolate as the post opens and closes. */
+    --excerpt-fade: linear-gradient(to bottom, #000 calc(100% - 72px), rgba(0, 0, 0, 0) 100%);
+    --excerpt-fade-open: linear-gradient(to bottom, #000 100%, rgba(0, 0, 0, 0) 100%);
+    overflow: hidden;
+    position: relative;
+}
+#home-posts .post .description img {
+    display: block;
+    height: auto;
+    margin: 15px auto;
+    max-width: 75%;
+}
+/* These cards are opaque white (see #home-posts .post), and so is the code
+   block's own fill — which leaves the 1px rim as the entire boundary. At the
+   stock #ebeef5 that is a 239-vs-255 hairline between two white areas, which is
+   exactly as faint as it sounds. The article card is translucent over a tinted
+   page, where the white block stands out on its own and the stock rim is fine,
+   so the heavier rim is kept to the cards that need it rather than applied to
+   every code block on the site. */
+#home-posts .post .description pre {
+    border-color: #d0d7de;
+}
+#home-posts .post .description:not(.expanded) {
+    /* Pre-JS fallback, kept in sync with the clamp height set in home.js. */
+    mask-image: var(--excerpt-fade);
+    -webkit-mask-image: var(--excerpt-fade);
+    max-height: 268px;
+    transition: mask-image 0.25s ease, -webkit-mask-image 0.25s ease;
+}
+#home-posts .post .description.expanded {
+    mask-image: var(--excerpt-fade-open);
+    -webkit-mask-image: var(--excerpt-fade-open);
+    max-height: none;
+    transition: mask-image 0.35s ease 0.15s, -webkit-mask-image 0.35s ease 0.15s;
+}
+/* Long articles stay cheap: only the part near the viewport is laid out,
+   and the remembered size prevents scrollbar jumping after expansion. */
+#home-posts .post .full-content {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 800px;
+}
+/* The .post.animating marker used to hang a rule here, skipping the pill's
+   backdrop-filter for the length of the height animation. The card behind the
+   pill is opaque now, so the pill has no backdrop-filter and nothing to
+   re-blur; home.js still sets the class. */
+#home-posts .post .post-tags .tag {
+    display: inline-block;
+    font-weight: bold;
+    margin-right: 10px;
+}
+#home-posts .post .post-tags a {
+    font-size: 14px;
+}
+#home-posts .post .post-tags,
+#archives .info,
+.article .info {
+    line-height: 1.7;
+}
+/* Tags sit right below the fading excerpt, so they're hidden while the post is
+   collapsed and only fade in once it expands. */
+#home-posts .post .post-tags {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#home-posts .post .description.expanded ~ .post-tags {
+    max-height: 64px;
+    opacity: 1;
+}
+#home-posts .post-title {
+    color: #85bac0;
+    text-align: center;
+}
+#home-posts .post:hover {
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.04),
+        0 6px 20px rgba(0, 0, 0, 0.07),
+        0 18px 46px rgba(146, 116, 176, 0.16);
+    transform: translate(-2px, -2px);
+    border-color: var(--tint-deep);
+}
+#home-posts-wrap {
+    background: transparent;
+    border-radius: 10px;
+    display: flex;
+    margin: auto;
+    padding: 20px;
+}
+#home-posts-wrap,
+#archives,
+.article,
+#footer #footer-wrap {
+    box-sizing: border-box;
+}
+#loading {
+    align-items: center;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    word-break: keep-all;
+    z-index: 2147483647;
+}
+/* The loading word, and now the only thing on this screen — the gif and the
+   "turn caching on" hint are gone, so the word carries the ring: it is set well
+   larger than a heading would be and tracked open a little, which is what keeps
+   it from floating in the middle of an empty circle.
+   It arrives as a sweep. Each letter rises and fades in, one after the next from
+   left to right, and then leaves the way it came — upward — so a cycle has one
+   direction in it instead of a direction change. The letters are in an
+   inline-flex with a gap rather than letter-spaced text, because letter-spacing
+   also hangs a space off the last letter, which shifts the whole word off the
+   ring's centre by half of it.
+   The stagger is the span's own --i from the template, set once on the word in
+   layout.ejs, so this file never has to know how many letters it has.
+   Timings: 3.6s a cycle, 110ms between letters. The seven finish rising 1380ms
+   in and stay whole until 2160ms, so the word reads as a word for most of a
+   second before the first letter starts to leave. A cycle that turns faster than
+   this reads as busy rather than patient.
+   The rise is deliberately small — a quarter of an em, ten pixels at this size.
+   At half an em the letters arrived like a jump; at this size the sweep is read
+   as drift, which is what a wait should feel like. */
+#loading-word {
+    display: inline-flex;
+    font-size: 26px;
+    gap: 0.1em;
+    margin: 10px;
+}
+#loading-word span {
+    display: inline-block;
+    /* Nothing before the app mounts: the sweep is declared under .app-ready below.
+       A letter is invisible until its own animation puts it on screen. */
+    opacity: 0;
+}
+/* Gated on a class main.js sets in its mounted hook, because mounting Vue
+   replaces the markup that is already on screen — the loader included — so an
+   animation declared unconditionally started twice: the page's own copy ran to
+   about "A", the node was swapped for Vue's, and the sweep began again at "L".
+   The cost is a few hundred milliseconds of empty ring on a cold load, which is a
+   better thing to look at than a sweep restarting mid-word.
+   `both` so the start keyframe holds during the letter's own delay — that is what
+   makes the word assemble left to right instead of all at once. */
+html.app-ready #loading-word span {
+    animation: loading-letter 3.6s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+    animation-delay: calc(var(--i, 0) * 110ms);
+}
+@keyframes loading-letter {
+    0% {
+        opacity: 0;
+        transform: translateY(0.25em);
+    }
+    /* In, upward, on the sweep's stagger. */
+    20% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    /* Held. The letters' windows overlap here, which is the moment the word is
+       readable as a word. */
+    60% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    /* Out the way it came in. Without this stop the letter would drop while
+       fading and the cycle would read as reversing on itself. */
+    80% {
+        opacity: 0;
+        transform: translateY(-0.25em);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(0.25em);
+    }
+}
+/* The ring was the plainest thing on this screen: a solid circle holding a word.
+   It now carries the motion the word does not — a light travelling around it.
+   The ring itself is unchanged (10px solid #b0a4e3): the light is a white sweep
+   drawn on ::before and masked down to the ring's own width, so nothing is added
+   to the material and the word keeps its clean white disc. It moves by transform,
+   which the compositor can run on its own.
+   The sweep is given a lavender drop-shadow rather than a white one: on a white
+   page a white glow is invisible, and the halo is what makes it read as light
+   passing over glass instead of a stripe of paint.
+   The gradient is turned by 166deg so the head sits at 9 o'clock (166 + 104) on
+   the frame the animation starts, and travels clockwise from there. Left to start
+   at the top, the first half-lap reads as light arriving from nowhere.
+   2.4s a lap — two laps for every three of the word's cycle, unrelated enough to
+   read as two things breathing at once rather than one mechanism.
+   The second, fainter light starts from the same point and runs the other way on a
+   9s lap. It is deliberately below the threshold of "another spinner": all it does
+   is keep the ring from looking like a single unbroken dial. */
+/* The ring is the plainest thing on this screen on purpose: a 500px circle, the
+   same footprint the home hero draws behind its title, with no light running
+   round it and no bloom. Everything that moves lives outside it, on the orbits,
+   so the ring itself stays the calm centre rather than another light source. */
+#loading-circle {
+    align-items: center;
+    border: 8px solid #b0a4e3;
+    border-radius: 50%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: min(44vmin, 400px);
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    width: min(44vmin, 400px);
+}
+/* Two hairline orbits. Each is one thin rule plus a wide, low-alpha bloom that
+   by construction fades outward — a shadow, not a band — so the light thins out
+   the further it gets from the line instead of stopping at an edge. The outer
+   orbit is fainter still, which is what makes the pair read as distance. */
+#loading-circle > .ring-orbit,
+#loading-circle > .ring-orbit-alt {
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}
+#loading-circle > .ring-orbit {
+    border: 1px solid rgba(176, 164, 227, 0.32);
+    box-shadow: 0 0 16px rgba(204, 164, 227, 0.14);
+    inset: -26px;
+}
+#loading-circle > .ring-orbit-alt {
+    border: 1px solid rgba(176, 164, 227, 0.18);
+    box-shadow: 0 0 22px rgba(204, 164, 227, 0.08);
+    inset: -52px;
+}
+/* The stars. One rotator per star, laid over the orbit by `inset: 0`, so the dot
+   always sits exactly on the orbit line whatever the viewport does to the ring's
+   size — no radius in px anywhere. The static angle comes from `--a` on the
+   `rotate` property and the drift from `transform` in the animation, which are
+   separate properties and compose, so every star can keep its own period while
+   starting where it was placed. */
+#loading-circle > .ring-orbit > i,
+#loading-circle > .ring-orbit-alt > i {
+    display: block;
+    inset: 0;
+    position: absolute;
+    rotate: var(--a, 0deg);
+}
+#loading-circle > .ring-orbit > i::before,
+#loading-circle > .ring-orbit-alt > i::before {
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, #e6d8f8 46%, #c3a8e8 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 7px 2px rgba(204, 164, 227, 0.55);
+    content: "";
+    height: var(--s, 5px);
+    left: 50%;
+    margin-left: calc(var(--s, 5px) / -2);
+    margin-top: calc(var(--s, 5px) / -2);
+    position: absolute;
+    top: 0;
+    width: var(--s, 5px);
+}
+/* Same gate as the word: nothing is painted, and no animation exists, until Vue
+   has finished rebuilding the layout and `.app-ready` lands. Otherwise the
+   rebuild hands every animation a fresh start time and the orbits jump. */
+html.app-ready #loading-circle > .ring-orbit,
+html.app-ready #loading-circle > .ring-orbit-alt {
+    opacity: 1;
+}
+html.app-ready #loading-circle > .ring-orbit {
+    animation: ring-travel 9s linear infinite reverse;
+}
+html.app-ready #loading-circle > .ring-orbit-alt {
+    animation: ring-travel 14s linear infinite;
+}
+/* Five stars, five periods, no two the same speed: they separate and rejoin the
+   way moons do, instead of turning as one rigid constellation. */
+html.app-ready #loading-circle > .ring-orbit > i:nth-child(1) {
+    animation: ring-travel 26s linear infinite;
+}
+html.app-ready #loading-circle > .ring-orbit > i:nth-child(2) {
+    animation: ring-travel 34s linear infinite reverse;
+}
+html.app-ready #loading-circle > .ring-orbit > i:nth-child(3) {
+    animation: ring-travel 19s linear infinite;
+}
+html.app-ready #loading-circle > .ring-orbit-alt > i:nth-child(1) {
+    animation: ring-travel 41s linear infinite;
+}
+html.app-ready #loading-circle > .ring-orbit-alt > i:nth-child(2) {
+    animation: ring-travel 29s linear infinite reverse;
+}
+@keyframes ring-travel {
+    to {
+        transform: rotate(1turn);
+    }
+}
+#main {
+    margin-right: calc(100% - 100vw);
+}
+/* Registered so the browser computes it once, as a number, instead of handing the
+   token stream to every rule that reads it: this changes on every frame of a
+   scroll and the whole bar inherits it. */
+@property --mp {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0;
+}
+/* The scroll morph.
+   --mp is one number written by js/main.js: how far the wallpaper has been
+   scrolled past — 0 while its bottom half still fills the screen, 1 once it is
+   gone. It drives the geometry and nothing else, so the shape can never disagree
+   with what is behind it, and the whole thing reverses on the way back up for the
+   same reason.
+   The material is not on this number. It is switched, once, by .menu-cloud, at
+   the one moment it can be switched safely — see updateMenuMorph, and the cloud
+   state further down. Two attempts at driving it from --mp instead are worth
+   recording, because both look reasonable on paper. A glass that ramps in from
+   the first pixel of scroll spends the middle of the scroll white under white
+   labels. And interpolating the ink to match, which is what fixes that, is not
+   something this stylesheet can be trusted with: color-mix() reading a stop
+   percentage out of a custom property came back as the wrong colour on roughly
+   one load in fifteen in Chromium 154, and a mid-ramp stop came back as plain
+   white. A plain colour on a transition has neither problem. */
+#menu {
+    --mp: 0;
+    /* The nav sits in a fixed-width column from rest all the way to the capsule,
+       so the title and the links keep their distance instead of sliding apart as
+       the bar widens or together as it shrinks. Left and right justified inside
+       it is what leaves the blank on both sides: at 1920 the column is 1120 and
+       the rest is gutter, where the two ends of the nav used to be most of a
+       screen apart. --menu-shell-max is the bar's own width once it floats —
+       the column plus its cloud padding, derived rather than written twice, so
+       the two cannot drift apart. */
+    --menu-content-max: 1120px;
+    --menu-pad-rest: 32px;
+    --menu-pad-cloud: 20px;
+    --menu-pad: calc(var(--menu-pad-rest) + (var(--menu-pad-cloud) - var(--menu-pad-rest)) * var(--mp));
+    --menu-shell-max: calc(var(--menu-content-max) + 2 * var(--menu-pad-cloud));
+    --menu-h-rest: 50px;
+    --menu-h-cloud: 46px;
+    --menu-h: calc(var(--menu-h-rest) + (var(--menu-h-cloud) - var(--menu-h-rest)) * var(--mp));
+    /* The hover pill keeps 7px of bar above and below it at either height, so
+       everything inside the bar only has to track --menu-h. */
+    --menu-pill-h: calc(var(--menu-h) - 14px);
+    --menu-ink: #555;
+    --menu-ink-cloud: #1e3e3f;
+    /* How far a group's panel has to drop before it is clear of the bar. An item's
+       pill is --menu-pill-h tall inside a --menu-h bar, so there is half the
+       difference of bar below it — always 7px, since the pill is defined as the
+       bar minus 14 — and the panel then starts 6px below that. Derived rather than
+       written as 13px so it cannot go stale if the pill's height changes. */
+    --menu-sub-drop: calc((var(--menu-h) - var(--menu-pill-h)) / 2 + 6px);
+    box-sizing: border-box;
+    font-weight: bold;
+    left: 0;
+    line-height: var(--menu-h);
+    /* Centred by the auto margins and shrunk by the cap, so one pair of rules
+       covers both ends: at rest the cap is the whole screen and the margins fall
+       to zero, and --mp pulls it in to --menu-shell-max. The 32px floor is what
+       keeps the ends off the screen edge on a narrow desktop, where the cap would
+       otherwise be nothing at all. */
+    margin-left: auto;
+    margin-right: auto;
+    max-width: calc(100% - var(--mp) * max(32px, 100% - var(--menu-shell-max)));
+    padding: 0 var(--menu-pad);
+    position: fixed;
+    right: 0;
+    /* Large enough to clamp to a pill at either height, so the ends round off
+       first and the bar then shrinks inside them. */
+    border-radius: calc(var(--mp) * 100px);
+    /* Two layers, not one, and the reason is the post cards.
+       A translucent white panel over an opaque white card is white on white —
+       measured 1.000:1, the two regions are the same pixel value — and no amount
+       of fill or blur pulls them apart without tinting the panel, which is the
+       one thing this panel is not allowed to be. So the separation has to be the
+       edge in every direction, which is what these two do together: a tight
+       contact shadow that draws the boundary, and a wide ambient one that lifts
+       the panel off the page. The single wide layer this used to be had a 10px
+       offset under a 30px blur and so reached nothing along the top or the sides
+       at all. The tone is deeper than the lavender it replaces for the same
+       reason: at 22% of a light colour the shadow only managed 1.10:1. */
+    box-shadow:
+        0 calc(var(--mp) * 1px) calc(var(--mp) * 3px) rgba(124, 106, 154, calc(var(--mp) * 0.18)),
+        0 calc(var(--mp) * 10px) calc(var(--mp) * 30px) rgba(124, 106, 154, calc(var(--mp) * 0.26));
+    top: calc(var(--mp) * 12px);
+    z-index: 1004;
+}
+/* Resting material: the tinted bar the menu has always been, at full chroma.
+   A desaturated version of this was tried and read as neither one thing nor the
+   other — a grey band above a white card — so the two hues are back.
+   The over-wallpaper state (#menu.menu-color) is a dark scrim, because there it
+   is legibility, not decoration. */
+#menu::before {
+    background: linear-gradient(120deg, #e4c6d0 0%, #cca4e3 100%);
+    border-radius: inherit;
+    content: "";
+    inset: 0;
+    opacity: 1;
+    pointer-events: none;
+    position: absolute;
+    transition: background 0.25s ease-out, opacity 0.4s ease;
+    z-index: -1;
+}
+#menu.menu-color::before {
+    background: #0003;
+}
+/* The cloud: one soft wash over a backdrop blur. The blur is what makes it read
+   as glass and not as a white lid — at 18px the wallpaper behind it is still
+   legible as colour, just not as detail.
+   The blur radius rides --mp rather than the switch, so by the time the panel
+   arrives it is already at nearly full strength and only its opacity has to
+   travel. The filter itself is held back to the cloud state, because a
+   backdrop-filter under a transparent layer is still a blur of everything behind
+   it: left on the resting rule it would smear the wallpaper the whole way down.
+   The panel is colourless on purpose — white where the light comes from, white
+   underneath. A tinted corner was tried in both blue and the gradient's purple
+   and taken out again: at the size this panel is, any colour in it stops reading
+   as glass and starts reading as a second accent laid over the wallpaper. The
+   only colour the bar keeps is the ink and the hover candidate.
+   The rim is the one place a colour is unavoidable, and it is what keeps the
+   panel legible once the posts have scrolled under it: the card behind is opaque
+   white and so is the panel over it, so the boundary has to come from an edge.
+   This one is a cool grey-purple at 38%, which lands near 1.5:1 against white —
+   a defined edge rather than a drawn border, and over the wallpaper it reads as
+   the glass's own. What makes it work is that it is a one-pixel step: the sides
+   used to carry a 1.3:1 ramp spread over 30px of blur and still read as no edge
+   at all, where the same contrast as a hard line does not. It fades in with --mp
+   like everything else: at rest the bar is the full-width strip and has no edge
+   to draw. */
+#menu::after {
+    background:
+        radial-gradient(120% 240% at 8% -60%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 58%),
+        rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(146, 132, 178, calc(var(--mp) * 0.38));
+    border-radius: inherit;
+    content: "";
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+/* One slow white wash drifting across the capsule, which is the part that reads
+   as fluid rather than as tinted glass. It lives in its own clipped layer so a
+   transform can carry it — cheap, and off the main thread — instead of
+   background-position, which would repaint the whole bar every frame. Painted
+   under the nav, so the labels never sit on a moving light.
+   There used to be a second one, tinted. It is gone with the tint: two washes on
+   a panel this size read as a gradient, and the one that was coloured is exactly
+   what was asked out. */
+#menu-cloud-glow {
+    border-radius: inherit;
+    inset: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+}
+#menu-cloud-glow::before {
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 76%);
+    border-radius: 50%;
+    content: "";
+    filter: blur(16px);
+    height: 320%;
+    left: -10%;
+    position: absolute;
+    top: -110%;
+    width: 46%;
+}
+/* Only animated once the cloud is up: at rest there is nothing to see it through,
+   and a permanently running filter would be paid for on every page. */
+#menu.menu-cloud #menu-cloud-glow::before {
+    animation: menu-cloud-a 26s ease-in-out infinite alternate;
+}
+@keyframes menu-cloud-a {
+    from {
+        transform: translate3d(-10%, 0, 0);
+    }
+    to {
+        transform: translate3d(150%, 0, 0);
+    }
+}
+#menu #desktop-menu {
+    align-items: center;
+    display: flex;
+    /* Left and right justified — the title at one end, the links at the other —
+       but inside a column rather than across the whole screen. Left to the screen
+       at 1920 the two ends are most of a metre apart and stop reading as one bar;
+       capping the column is what keeps them a glance apart. --menu-content-max is
+       also the width the bar itself shrinks to, so the content stays in the same
+       column from rest through to the capsule instead of sliding as it shrinks. */
+    gap: calc(14px - var(--mp) * 4px);
+    height: var(--menu-h);
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--menu-content-max);
+    position: relative;
+}
+#menu #desktop-menu .title {
+    align-items: center;
+    display: inline-flex;
+    height: var(--menu-h);
+}
+/* Everything after the title is pushed to the far end of the column. This is the
+   only auto margin in the bar: the gap above spaces the links from each other,
+   and the title is separated by whatever is left over. */
+#menu #desktop-menu .title + a {
+    margin-left: auto;
+}
+#menu #desktop-menu > a,
+#menu #desktop-menu .menu-parent,
+#menu #mobile-menu a,
+#menu #mobile-menu .title {
+    /* A plain colour on a transition, not an interpolated one. The ink has to
+       follow the panel it is read on, and the two are swapped together by
+       .menu-cloud — see the cloud state below. Scoped to the top level on
+       purpose: the group panels carry their own ink, because they are not the
+       bar (see the .menu-sub rules below). */
+    color: var(--menu-ink);
+    transition: color 0.4s ease;
+}
+/* A bar item, whether it is a plain link or a group's own link. The group is a
+   flex item of its own, so its link has to be reached through it — > a does not
+   see it. */
+#menu #desktop-menu > a,
+#menu #desktop-menu .menu-parent {
+    align-items: center;
+    /* A pill, at either height — the same shape the indicator draws, and the shape
+       the bar itself ends up. */
+    border-radius: calc(var(--menu-pill-h) / 2);
+    display: inline-flex;
+    height: var(--menu-pill-h);
+    /* Barely tightens as the bar shrinks. It used to lose 7px a side, which was
+       room the run did not have with icons in it; without them the labels are the
+       only thing in the pill, and at 9px a side they read as cramped. Two px is
+       enough to keep the pill moving with the bar and nothing more. */
+    padding: 0 calc(16px - var(--mp) * 2px);
+    position: relative;
+    z-index: 1;
+}
+/* A group on the bar: the wrapper is the flex item, so the run's gap applies to
+   it rather than to the link inside, and the panel is positioned against it. */
+#menu #desktop-menu .menu-group {
+    align-items: center;
+    display: inline-flex;
+    height: var(--menu-pill-h);
+    position: relative;
+}
+/* The caret, drawn rather than set in a font: it has to take the item's ink — and
+   that ink changes with .menu-cloud — and it has to be able to turn over when the
+   panel opens. A triangle of borders does both; a glyph would need a second
+   colour rule and a second transition. */
+#menu #desktop-menu .menu-parent::after {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid currentColor;
+    content: "";
+    display: block;
+    margin-left: 7px;
+    transition: transform 0.25s ease;
+}
+#menu #desktop-menu .menu-group:hover .menu-parent::after,
+#menu #desktop-menu .menu-group:focus-within .menu-parent::after {
+    transform: rotate(180deg);
+}
+/* The bridge that keeps the group hovered while the pointer crosses the gap
+   between the bar and the panel. It lives on the group, not on the panel: the gap
+   is outside the panel's box, and a child of the panel would be clipped away by
+   the overflow the panel needs to hold its sheen (below). */
+#menu #desktop-menu .menu-group::after {
+    content: "";
+    height: var(--menu-sub-drop);
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 100%;
+}
+/* The panel a group opens on hover.
+   It used to be a flat milky card: no lit corner, no rim, no elevation, and a
+   near-black ink that made it the heaviest thing on screen — a different object
+   from the glass capsule it hangs off. It now borrows the capsule's recipe
+   outright (see #menu::after): the lit corner, the translucent white under it,
+   the same grey-purple rim and the same two-layer lavender shadow.
+   Held at 0.82 white rather than the capsule's 0.55. A sliver can lean on the
+   wallpaper for its body, a panel carrying four rows of text cannot: at 0.55 the
+   wallpaper's colour came through and the card read as a grey slab on a bright
+   photo. At 0.82 it is a white surface at every wallpaper, still showing a hint
+   of the photo through the blur, and the rows keep 7:1 on the worst of them. */
+#menu #desktop-menu .menu-sub {
+    --sub-fill: rgba(255, 255, 255, 0.82);
+    --sub-lit: rgba(255, 255, 255, 0.9);
+    --sub-rim: rgba(146, 132, 178, 0.34);
+    --sub-shadow: 0 1px 3px rgba(124, 106, 154, 0.12), 0 12px 32px rgba(124, 106, 154, 0.2);
+    --sub-ink: #1b3a3c;
+    --sub-ink-hover: #0d2628;
+    --sub-pill: rgba(230, 206, 242, 0.4);
+    --sub-pill-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 10px rgba(146, 116, 176, 0.12);
+    --sub-sheen: rgba(255, 255, 255, 0.9);
+    background:
+        radial-gradient(120% 240% at 8% -60%, var(--sub-lit) 0%, rgba(255, 255, 255, 0) 58%),
+        var(--sub-fill);
+    backdrop-filter: blur(20px) saturate(170%);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    border: 1px solid var(--sub-rim);
+    border-radius: 18px;
+    box-shadow: var(--sub-shadow);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    left: 50%;
+    min-width: 156px;
+    opacity: 0;
+    /* Holds the drifting sheen inside the rounded corner. Nothing else needs to
+       escape the panel — the hover bridge was moved to the group for this. */
+    overflow: hidden;
+    padding: 6px;
+    position: absolute;
+    /* Below the bar, not below the pill — see --menu-sub-drop. */
+    top: calc(100% + var(--menu-sub-drop));
+    /* Centred under the group and nudged up, so it animates down into place. */
+    transform: translate(-50%, -6px);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+    visibility: hidden;
+    z-index: 2;
+}
+/* The sheen that makes it liquid rather than merely frosted: one soft white wash
+   drifting across the panel. z-index -1 puts it over the panel's own fill and
+   under the rows, which is the whole of the layering it needs.
+   Transform-only, so it rides the compositor, and only while the panel is open —
+   a hidden panel still ticks its animations, and this one would be painting a
+   card nobody can see on every page. */
+#menu #desktop-menu .menu-sub::after {
+    background: radial-gradient(closest-side, var(--sub-sheen), rgba(255, 255, 255, 0) 74%);
+    border-radius: 50%;
+    content: "";
+    filter: blur(12px);
+    height: 210%;
+    left: -45%;
+    position: absolute;
+    top: -55%;
+    width: 80%;
+    z-index: -1;
+}
+#menu #desktop-menu .menu-group:hover .menu-sub,
+#menu #desktop-menu .menu-group:focus-within .menu-sub {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    visibility: visible;
+}
+#menu #desktop-menu .menu-group:hover .menu-sub::after,
+#menu #desktop-menu .menu-group:focus-within .menu-sub::after {
+    animation: menu-sub-sheen 13s ease-in-out infinite alternate;
+}
+@keyframes menu-sub-sheen {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+    to {
+        transform: translate3d(170%, 22%, 0);
+    }
+}
+/* The panel's rows. They had a hover wash of their own and no candidate of any
+   kind, which is where the panel stopped matching the bar: on the bar the pointer
+   is tracked by one pill that slides between items, while down here the highlight
+   blinked on and off per row and, at 0.28 of #cca4e3, was the heaviest colour in
+   the whole menu.
+   So the panel gets the same device the bar uses — a single pill, placed by
+   main.js on mouseenter and slid by a transition — and the rows give up their
+   own background. The tint is the bar's cloud candidate seen through glass: the
+   same lavender, held at 0.4 over a 0.68 white panel, with an inner highlight so
+   it reads as a lit surface rather than a stain. The ink stays dark; only the
+   pill is new. Rows sit at z-index 1 so the pill (0) never crosses their text,
+   and the sheen stays at -1. */
+#menu #desktop-menu .menu-sub a {
+    border-radius: 999px;
+    color: var(--sub-ink);
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 7px 14px;
+    position: relative;
+    transition: color 0.18s ease;
+    white-space: nowrap;
+    z-index: 1;
+}
+/* opacity: 1 undoes the global a:hover dim, which would otherwise wash the row
+   out at the same moment the pill arrives under it. */
+#menu #desktop-menu .menu-sub a:hover,
+#menu #desktop-menu .menu-sub a:focus-visible {
+    color: var(--sub-ink-hover);
+    opacity: 1;
+}
+#menu #desktop-menu .menu-sub-indicator {
+    background: var(--sub-pill);
+    border-radius: 999px;
+    box-shadow: var(--sub-pill-shadow);
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    transition:
+        left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        top 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.2s ease;
+    z-index: 0;
+}
+#menu #desktop-menu .menu-sub-indicator.visible {
+    opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+    #menu #desktop-menu .menu-sub-indicator {
+        transition: opacity 0.2s ease;
+    }
+}
+#menu-indicator {
+    position: absolute;
+    top: 7px;
+    height: var(--menu-pill-h);
+    /* A pill at either height, tracking --menu-pill-h so it stays one as the bar
+       shrinks. It was a 10px rectangle at rest, which read as a tab rather than as
+       the rounded candidate the capsule state already had. */
+    border-radius: calc(var(--menu-pill-h) / 2);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    box-shadow: 0 2px 18px rgba(146, 116, 176, 0.14),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+#menu-indicator.visible {
+    opacity: 1;
+}
+#menu #mobile-menu {
+    min-height: 50px;
+    text-align: center;
+}
+#menu #mobile-menu .items {
+    padding: 10px 0 20px;
+    z-index: 1002;
+}
+#menu #mobile-menu .items .item {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    min-width: 200px;
+    width: 80%;
+}
+#menu #mobile-menu .items a:hover {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border-radius: 10px;
+    box-shadow: 0 2px 16px rgba(146, 116, 176, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+/* A merged group's children in the mobile list. Their own icon column is left
+   empty, so the label lines up with the parent's label rather than with its icon
+   — the indent is the whole of the hierarchy here, which is why they also step
+   down a size and a little in weight. */
+#menu #mobile-menu .items .item-child .item {
+    margin-top: -4px;
+}
+#menu #mobile-menu .items .item-child .item > div:last-child {
+    font-size: 13px;
+    opacity: 0.85;
+}
+#menu #mobile-menu .title {
+    cursor: pointer;
+    z-index: 1003;
+}
+#menu-curtain {
+    background: #0003;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+}
+#menu.menu-color {
+    --menu-ink: #fff;
+}
+/* The cloud state. .menu-cloud is set by js/main.js at the one point the material
+   can change without the labels ending up on their own colour: when the wallpaper
+   has left the bar. Everything here is a crossfade — each layer carries its own
+   opacity transition — so the panel, its washes and its ink arrive together.
+   Declared after .menu-color on purpose: both set --menu-ink at the same
+   specificity, and the cloud has to be the one that wins.
+   Only the glass needs the blur, and only here; see #menu::after. */
+#menu.menu-cloud {
+    --menu-ink: var(--menu-ink-cloud);
+}
+#menu.menu-cloud::before {
+    opacity: 0;
+}
+#menu.menu-cloud::after {
+    backdrop-filter: blur(calc(var(--mp) * 18px)) saturate(calc(100% + var(--mp) * 70%));
+    -webkit-backdrop-filter: blur(calc(var(--mp) * 18px)) saturate(calc(100% + var(--mp) * 70%));
+    opacity: 1;
+}
+#menu.menu-cloud #menu-cloud-glow {
+    opacity: 1;
+}
+#menu.menu-color #menu-indicator {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    box-shadow: 0 2px 20px rgba(255, 255, 255, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+/* Once the cloud is up the indicator sits on white, where the translucent white
+   it uses everywhere else has nothing left to separate from. Tinted with
+   #cca4e3 — the purple the bar's own gradient ends on, so the candidate belongs
+   to the same family as the bar it replaced — but carried very light: the panel
+   behind it is white, and anything more than a wash reads as a filled button
+   rather than as a hover. It is deliberately not the blue the rest of the chrome
+   shadows with, for the same reason the panel itself carries no colour. */
+#menu.menu-cloud #menu-indicator {
+    background: rgba(230, 206, 242, 0.3);
+    box-shadow: 0 2px 16px rgba(204, 164, 227, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+/* A full-width band under the capsule and fading out below it used to live here.
+   It was meant to soften content arriving beside the floating bar, but a
+   rectangular slab of --page-bg across the top of the viewport draws exactly the
+   edge it was hiding: a straight-sided frame around a rounded capsule, most
+   obvious where a white card passes under it. The bar carries its own shadow and
+   rim, so it is a surface on its own; nothing needs to sit behind it. */
+#preview {
+    align-items: center;
+    background-color: #fffc;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 1005;
+}
+#preview-content {
+    box-shadow: 0 0 50px 10px #d9d9d980;
+    margin: auto;
+    max-height: 95%;
+    max-width: 95%;
+}
+#search-bar {
+    font-family: Lexend, "Noto Sans SC", sans-serif;
+    /* The list below starts at 30px — the rail's column — and the search field is
+       the first line of that same block, so it starts there too. Left flush with
+       #archives it read as 30px wider than every card under it. */
+    margin-bottom: 50px;
+    margin-left: 30px;
+    width: calc(100% - 30px);
+    z-index: 1000;
+    /* Rest state: the same 1px ink hairline and the same faint drop as the cards
+       below it, so the field belongs to the list it filters. The theme's
+       #d0d7de is a GitHub grey — the one cool neutral left on the page, and it
+       showed as a slightly bluish outline against a warm tint. */
+    border-color: rgba(30, 62, 63, 0.1);
+    box-shadow: 0 10px 26px -24px rgba(30, 62, 63, 0.5);
+}
+/* The focus glow is the bar's own gradient purple, not a blue of its own — the
+   same #cca4e3 the menu's hover candidate uses, so the site's two accents agree.
+   The alphas are higher than the ones they replace because purple at this
+   lightness is about twice the luminance of the blue that was here: at the old
+   0.18 the halo would come out at half the strength and read as no glow at all.
+   .input:focus below is a matched pair with this one — the bar carries both
+   selectors, so the two have to be changed together. */
+#search-bar:focus {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border-color: rgba(204, 164, 227, 0.6);
+    box-shadow: 0 4px 28px rgba(204, 164, 227, 0.32),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+#timeline-wrap {
+    display: flex;
+    flex-direction: column-reverse;
+}
+/* The same wrapper on the tag / category pages, where the posts are already in
+   the order they are meant to be read and must not be reversed. */
+#timeline-wrap.is-static {
+    flex-direction: column;
+}
+* {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    scrollbar-color: #cca4e3 #f7f0fb;
+    scrollbar-width: thin;
+    word-wrap: break-word;
+}
+.article {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.03),
+        0 3px 10px rgba(0, 0, 0, 0.05),
+        0 12px 40px rgba(0, 0, 0, 0.07);
+    font-size: 15px;
+    margin: auto;
+    margin-top: 100px;
+    padding: 40px;
+}
+/* The article's own title, centered. It has to be addressed through this wrapper
+   rather than as `.article h1`: the body can carry h1s of its own, and a heading
+   written in the middle of an article wants to stay with the text. Only the
+   title block moves. */
+.article-title {
+    text-align: center;
+}
+/* The date / category / tag line under it goes with the title, so it is centered
+   too — a centered title over a left-aligned meta line reads as a mistake. This
+   is also what the home page's cards do with the same line (see
+   #home-posts .post .category-and-date). Scoped to .article: #archives .info is a
+   different line on a different page and is not part of this. */
+.article .info {
+    text-align: center;
+}
+/* Each meta item carries a right margin to space itself off the next one. On the
+   last item that margin is empty space inside the line box, and centering the
+   line box counts it — measured, it sat the whole line 5px left of the title it
+   sits under. Dropping it on whatever happens to be last (a post can end on the
+   date, the category or the tags) is what makes the two share an axis. */
+.article .info > :last-child,
+.article .info .tags > :last-child {
+    margin-right: 0;
+}
+/* Article TOC sidebar: sticky glass column pinned to the right of the article.
+   Built by js/lib/toc.js; hidden until the article has any headings. */
+.article-wrap {
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+}
+/* wide screens: the article centers by itself — give it a very slight left lean */
+@media (min-width: 1200px) {
+    .article-wrap {
+        padding-right: 3vw; /* shifts the centered article left by ~1.5vw */
+    }
+    /* Nothing on the right to lean away from, so the article takes the middle.
+       Set by post.ejs from a page's `toc: false`. */
+    .article-wrap-no-toc {
+        padding-right: 0;
+    }
+}
+.article-side {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 14px;
+    box-shadow:
+        0 2px 18px rgba(146, 116, 176, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    box-sizing: border-box;
+    display: none; /* shown as flex by toc.js when headings exist */
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    position: fixed; /* pinned beside the independently-centered article */
+    right: calc((100vw - 900px) / 2 - 232px); /* 200px bar + 32px gap */
+    top: 100px;
+    width: 200px;
+}
+/* Sentence case, unspaced: the panel's own label, not a section marker. */
+.article-side-title {
+    color: #85bac0;
+    font-size: 13px;
+    font-weight: 700;
+}
+.article-side-toc {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+    /* scrollbar-color: auto + scrollbar-width: auto → Chromium uses the webkit
+       pseudo-element path, where the 4px width AND the teal thumb below both
+       apply. (A non-auto scrollbar-color would switch Chrome to the standard
+       path and ignore the webkit width, falling back to the ~12px default.) */
+    scrollbar-color: auto !important;
+    scrollbar-width: auto !important;
+}
+.article-side-toc::-webkit-scrollbar {
+    width: 4px !important;
+}
+.article-side-toc::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+.article-side-toc::-webkit-scrollbar-thumb {
+    background: rgba(133, 186, 192, 0.5) !important; /* softer teal */
+    /* kill the theme's global thumb `border: 3px solid #f7f0fb` — at a 4px bar
+       that pink border covers the whole thumb and hides the teal background */
+    border: 0 !important;
+    border-radius: 2px !important;
+}
+.article-side-toc::-webkit-scrollbar-thumb:hover {
+    background: rgba(133, 186, 192, 0.7) !important; /* slightly deeper on hover */
+}
+/* Firefox (ignores ::-webkit-scrollbar): thin + teal */
+@supports (-moz-appearance: none) {
+    .article-side-toc {
+        scrollbar-color: rgba(133, 186, 192, 0.5) transparent !important;
+        scrollbar-width: thin !important;
+    }
+}
+.article-side-toc .article-toc-item {
+    border-radius: 8px;
+    color: #5c6b72;
+    cursor: pointer;
+    display: block;
+    font-size: 13px;
+    line-height: 1.5;
+    opacity: 1; /* undo the global a:hover dim */
+    padding: 5px 10px;
+    padding-left: calc(10px + var(--level, 0) * 14px);
+    transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+}
+.article-side-toc .article-toc-item:hover {
+    background: rgba(255, 255, 255, 0.65);
+    color: #85bac0;
+    opacity: 1;
+}
+/* The active row is marked by its fill and its ink, nothing else: no ring (that
+   reads as a text field) and no rule down the left edge. */
+.article-side-toc .article-toc-item.active {
+    background: rgba(133, 186, 192, 0.12);
+    color: #1e3e3f;
+    font-weight: 600;
+}
+/* keep jumped-to headings clear of the fixed nav bar */
+.article .content h2,
+.article .content h3,
+.article .content h4,
+.article .content h5,
+.article .content h6 {
+    scroll-margin-top: 70px;
+}
+/* no room for the fixed sidebar beside a centered 900px article below ~1400px */
+@media (max-width: 1399px) {
+    .article-side {
+        display: none !important;
+    }
+}
+.article .content {
+    margin: 50px 0;
+}
+/* The heading scale inside an article, recalibrated for a 15px body. The site's
+   own h1–h6 are 30/27/24/21/18/15 — three pixels apart, which is not a scale, it
+   is a list. These step by ratio instead (1.5 / 1.25 / 1.12).
+   The air around them is asymmetric but close to the paragraph break, not a
+   multiple of it: 2.1em of space above (50px on an h2) opened a hole big enough
+   that a heading and the line it belonged to stopped reading as one block — the
+   附件 → link → 更新日志 case had most of a screen of nothing in it. Now the gap
+   above is ~2 line heights of the body text and the gap below is under one, so a
+   heading binds to the text underneath it. px, not em: these are gaps in the
+   body's rhythm and should not grow with the heading's own size.
+   `.article h1` is excluded on purpose — a heading written in the body is not a
+   title. */
+.article .content h2 {
+    font-size: 24px;
+    letter-spacing: -0.005em;
+    margin: 26px 0 10px;
+}
+.article .content h3 {
+    font-size: 20px;
+    margin: 22px 0 8px;
+}
+.article .content h4 {
+    font-size: 17.5px;
+    margin: 18px 0 6px;
+}
+.article .content h5 {
+    font-size: 16.5px;
+    margin: 18px 0 6px;
+}
+.article .content h6 {
+    color: #5c6b72;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    margin: 18px 0 6px;
+}
+/* The first heading in a body has nothing above it to be spaced off, and the 50px
+   the content block already carries is the gap. */
+.article .content > :first-child {
+    margin-top: 0;
+}
+/* A spoiler (`%%文字%%`) is a solid bar lying on its own text: the fill takes the
+   ink's colour and the glyphs are painted transparent, so closed it reads as one
+   clean rule exactly the width of what is underneath — a redaction, not a
+   highlight. Hovering (or focusing: the span carries tabindex) takes both away,
+   and because fill and ink are the same colour the two crossfade instead of one
+   snapping off.
+
+   The glyphs are hidden with `-webkit-text-fill-color` rather than `color`
+   alone: it is the property that actually paints them, it inherits, and it beats
+   a descendant's own `color`, so a link or a code chip inside a spoiler goes
+   under the bar in the same colour as the rest of the sentence and comes back in
+   its own rose on reveal. `box-decoration-break: clone` gives a wrapped spoiler
+   one bar per line; without it the fill would be a single box behind both
+   fragments, with a gap at the wrap.
+
+   The fill is `currentColor`, not the ink's hex: the bar is the sentence's own
+   colour in whatever scheme the reader has the page in — including the pages of
+   browser dark-mode extensions, which recolour text and colours separately and
+   would otherwise leave a stale dark bar on a light-on-dark page. It is also
+   what makes the reveal a crossfade rather than a cut.
+
+   Bare `.spoiler` (like `code` and `a` further down), not
+   `.article .content .spoiler`: the home list renders a post's body as its
+   excerpt, and a spoiler there would otherwise be laid out with the text plain.
+   Nothing else in the theme uses the class name. */
+.spoiler {
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    background-color: currentColor;
+    border-radius: 3px;
+    cursor: help;
+    -webkit-text-fill-color: transparent;
+    /* The fill is the span's own box, so horizontal padding is a trap: any
+       padding wide enough to read as air inside the bar is painted over the
+       neighbour as well, and the negative margin that kept the line's spacing
+       then pulls that neighbour into the paint — in Chinese prose, which has no
+       spaces around the span, the glyphs either side lost their first sliver and
+       the bar visibly ate their strokes. The void belongs *outside* the bar
+       instead, as a hair of margin: the same 0.1em of air, none of it painted,
+       and the two words stay whole. Vertical padding stays — it never reaches a
+       neighbour, and it is what makes the fill read as a bar rather than a
+       highlight sitting exactly on the text's baseline box. */
+    margin: 0 0.1em;
+    padding: 0.05em 0;
+    transition:
+        background-color 0.18s ease,
+        -webkit-text-fill-color 0.18s ease;
+}
+/* Inline code and the theme's other text chips keep a background we would see
+   through the bar as a pale patch — and the patch's width would give away how
+   much text is hidden. They are turned off only in the closed state; opening the
+   spoiler hands them back as they were. */
+.spoiler:not(:hover):not(:focus) :is(code, kbd, mark) {
+    background: none;
+}
+.spoiler:hover,
+.spoiler:focus {
+    background-color: transparent;
+    -webkit-text-fill-color: currentColor;
+}
+/* Chromium paints selected glyphs with `color` and lets the selection band lie
+   over the bar, which left the text ink-on-ink under a translucent pink — a
+   smudge. The site's rose at full opacity (what rgba(255, 162, 196, 0.18) looks
+   like over a white card) buries the bar instead, so a reader dragging across a
+   spoiler gets the same selection as anywhere else in the sentence. */
+.spoiler::selection {
+    background-color: #ffeef4;
+    color: #1e3e3f;
+}
+@media (prefers-reduced-motion: reduce) {
+    .spoiler {
+        transition: none;
+    }
+}
+/* On paper there is no pointer to open it with, and an unexplained black rule is
+   just a censored paragraph. */
+@media print {
+    .spoiler {
+        background-color: transparent;
+        -webkit-text-fill-color: currentColor;
+    }
+}
+.article .info .date {
+    color: #5c6b72;
+    display: inline-block;
+    margin-right: 10px;
+}
+.code-content {
+    /* Named so the fold below can do its arithmetic in the block's own terms
+       instead of repeating the numbers. */
+    --code-pad-top: 50px;
+    --code-pad-bottom: 20px;
+    /* border-box, so the max-height the toggle animates is the height of the
+       whole block — the same number offsetHeight reports. Under the default
+       content-box that pin would have to be written short of the box it
+       actually makes, and the glide would start from the wrong place. */
+    box-sizing: border-box;
+    font-size: 13px;
+    line-height: 2;
+    overflow: auto;
+    padding: var(--code-pad-top) 30px var(--code-pad-bottom);
+    white-space: pre;
+}
+/* Vertical scrolling is held off in both states, not just the folded one.
+   Unfolding puts every row back while the box is still pinned at the folded
+   height, so for the length of the glide the content is taller than its box —
+   under `auto` that raises a vertical scrollbar, which then vanishes as the box
+   catches up. Nothing here ever needs to scroll vertically: fully open, the box
+   is its content. */
+pre.code-collapsible .code-content {
+    overflow-y: hidden;
+}
+/* A code block past its fold is clipped to --code-visible-lines lines by
+   js/lib/highlight.js, which also hangs a toggle on the block's corner and
+   publishes that count and --code-fade-h (how much of the tail fades out). One
+   line box is 2em of the 13px font this rule sets, which is what line-height: 2
+   makes it. */
+pre.code-collapsible.code-collapsed .code-content {
+    max-height: calc(
+        var(--code-visible-lines, 25) * 2em + var(--code-pad-top) +
+            var(--code-pad-bottom)
+    );
+    /* The cut is a fade, not an edge: the tail fades out over its last
+       --code-fade-h, measured up from the last line's bottom, so the fade
+       finishes on the last line the block shows rather than running on past it.
+       Below that the mask goes solid again — the only thing left down there is
+       the scrollbar a long line raises, and fading it away would leave the block
+       looking unscrollable. */
+    --code-fade: linear-gradient(
+        to bottom,
+        #000 calc(100% - var(--code-fade-h, 104px) - var(--code-pad-bottom)),
+        rgba(0, 0, 0, 0) calc(100% - var(--code-pad-bottom)),
+        #000 calc(100% - var(--code-pad-bottom))
+    );
+    mask-image: var(--code-fade);
+    -webkit-mask-image: var(--code-fade);
+}
+/* Out of the layout rather than left to overflow: a row past the last shown line
+   is not part of the block at all, so not even its line number shows through the
+   fade or the padding below it. */
+pre.code-collapsible.code-collapsed .code-hidden-line {
+    display: none;
+}
+/* The copy control owns the corner, as it does on a block with no caret, and the
+   caret sits just to its left wearing the same bare-icon get-up — so the two read
+   as one pair of controls rather than a button next to an ornament. 35px is
+   measured from the caret's own box: with its glyph 8px in from that edge, this
+   leaves the two glyphs a tight 9px apart and keeps the copy control's glyph well
+   clear of the caret's hit area. A solid caret rather than a line-drawn arrow,
+   which read as too light beside the copy glyph; it points at the rest of the code
+   and turns over when there is none left. */
+.code-toggle {
+    color: #5c6b72; /* matches .copycode */
+    cursor: pointer;
+    position: absolute;
+    right: 35px;
+    top: 0;
+}
+.code-toggle i {
+    /* A caret is a small glyph: at .copycode's own 15px it read as a lighter
+       thing sitting beside the copy icon rather than its peer. Sized up until the
+       two glyphs carry the same weight, and padded evenly left and right — an
+       uneven box puts the caret off-centre in it, and the 180° turn below happens
+       about the box, which would swing the caret sideways between the two
+       states. */
+    font-size: 21px;
+    padding: 12px 8px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    /* Turn about the caret's own ink rather than the box around it. The glyph
+       does not sit centred in its line box — at this size its ink runs from
+       0.5px to 22.5px of the 21px box, so its centre is 1px (0.048em) below the
+       box's. Turning about the box would leave the caret 2px lower pointing up
+       than it is pointing down. */
+    transform-box: content-box;
+    transform-origin: 50% calc(50% + 0.048em);
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+pre.code-collapsible:not(.code-collapsed) .code-toggle i {
+    transform: rotate(180deg);
+}
+.comment iframe,
+body::-webkit-scrollbar-track {
+    border-radius: 0;
+}
+.content {
+    transition: opacity 0.25s;
+}
+.content img,
+.content video,
+.content audio,
+.content iframe {
+    display: block;
+    margin: 15px auto;
+    max-width: 75%;
+}
+.video-embed {
+    margin: 20px auto;
+    max-width: 75%;
+    position: relative;
+    width: 100%;
+}
+.video-embed::before {
+    content: "";
+    display: block;
+    padding-top: 56.25%;
+}
+.video-embed iframe {
+    border-radius: 10px;
+    height: 100%;
+    left: 0;
+    margin: 0;
+    max-width: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.copycode {
+    color: #5c6b72;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.copycode i {
+    padding: 15px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: transform 0.25s;
+}
+.copycode.copied i {
+    transform: scale(1.25);
+}
+.copycode.copied i:first-child,
+.copycode:not(.copied) i:last-child {
+    opacity: 0;
+}
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+.hljs-ln-code {
+    padding-left: 20px !important;
+}
+.hljs-ln-numbers {
+    border-right: 1px solid #ccc;
+    color: #ccc;
+    padding-right: 10px !important;
+    text-align: right;
+    vertical-align: top;
+}
+.icon {
+    color: #5c6b72;
+    margin-right: 5px;
+}
+.input {
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 50px;
+    box-sizing: border-box;
+    color: #000;
+    display: block;
+    font-size: 15px;
+    height: 50px;
+    text-indent: 20px;
+    transition: background 0.25s, border 0.25s, box-shadow 0.25s;
+    width: 100%;
+}
+/* Matched pair with #search-bar:focus above — see the note there. This one is
+   also what the encrypted-post password field uses. */
+.input:focus {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border-color: rgba(204, 164, 227, 0.55);
+    box-shadow: 0 4px 24px rgba(204, 164, 227, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    outline: none;
+}
+.input:hover {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+/* The first-load fade, in two halves that are one movement: the page and the bar
+   arrive together when the loading screen goes.
+   Opacity only. This used to run a scale(1.1) alongside, which transforms the
+   whole subtree — the hero's bottom edge, and the wallpaper's fade with it, kept
+   sliding for half a second after the wallpaper had landed, which read as the
+   fade settling a second time. A pure fade has nothing that can move.
+   0.52s is what the loading screen's own 0.3s departure is crossed over with (see
+   .fade-leave-active), and the elements inside the page fade up on top of this
+   one, on their own cues — see js/lib/reveal.js, whose load-time waits are
+   measured against this duration. Tuned as a pair. */
+.into-enter-active {
+    transition: opacity 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.into-enter-from {
+    opacity: 0;
+}
+/* The bar's half. The class is on the bar rather than on a shared ancestor
+   because the loading screen sits between the two, at the top of #layout, and
+   fading that would fade the screen with it.
+   The class comes from the template (:class on #menu in layout/menu.ejs), so this
+   half depends on nothing but Vue having mounted — the same dependency the
+   loading screen already has, since it is a v-show that nothing else can lift. */
+#menu:not(.menu-enter) {
+    opacity: 0;
+}
+#menu.menu-enter {
+    transition: opacity 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Reduced motion gets the page as it was before any of this existed: no fade
+   here, and js/lib/reveal.js does not hide or animate anything at all. The
+   loading word is the one thing that cannot simply be left alone — it starts
+   hidden and is only ever shown by its own animation, so the preference has to
+   put it on screen as a plain word. */
+@media (prefers-reduced-motion: reduce) {
+    .into-enter-active,
+    #menu.menu-enter {
+        transition: none;
+    }
+    /* Both selectors on purpose: the first covers the page before the app mounts,
+       the second has to match the specificity of the rule that starts the sweep
+       under .app-ready, or the animation would win and this would do nothing. */
+    #loading-word span,
+    html.app-ready #loading-word span {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+    /* The orbits and their stars are decoration, so they are simply not drawn:
+       the ring stays a plain circle with the word in the middle. The gated
+       selectors have to be repeated here, or their animation would outrank this
+       rule and the stars would keep drifting. */
+    #loading-circle > .ring-orbit,
+    #loading-circle > .ring-orbit-alt,
+    #loading-circle > .ring-orbit > i,
+    #loading-circle > .ring-orbit-alt > i,
+    html.app-ready #loading-circle > .ring-orbit,
+    html.app-ready #loading-circle > .ring-orbit-alt,
+    html.app-ready #loading-circle > .ring-orbit > i,
+    html.app-ready #loading-circle > .ring-orbit-alt > i {
+        animation: none;
+        display: none;
+    }
+}
+.katex {
+    white-space: normal !important;
+}
+.language {
+    background: linear-gradient(to right, #ed6ea0 0%, #ec8c69 100%);
+    border-radius: 0 0 10px 10px;
+    box-shadow: 1px 1px 0.75rem #ed6ea14d;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    left: 30px;
+    padding: 10px 15px;
+    position: absolute;
+    top: 0;
+}
+.page-num,
+.icon-link a,
+.friend-link a {
+    transition: background 0.25s, color 0.25s;
+}
+.page-num:hover,
+.icon-link a:hover,
+.friend-link a:hover,
+.categories-tags a:hover,
+.more-center:hover {
+    opacity: 1;
+}
+.slide-enter-active,
+.slide-leave-active {
+    transition: margin-top 0.3s, opacity 0.3s;
+}
+.slide-enter-from,
+.slide-leave-to {
+    margin-top: -300px;
+    opacity: 0;
+}
+.timeline {
+    /* The transition is the search animation: js/lib/search.js hides a
+       non-matching row by giving it a margin-top of minus its own height plus
+       this margin-bottom, which is what lets the other rows close up over it. */
+    margin-bottom: 30px;
+    transition: margin-top 0.5s, opacity 0.3s, visibility 0.3s;
+}
+/* The rail. One segment per row, drawn by the row itself, running from this
+   row's dot down into the next row's — which is why the segment's `bottom` is
+   the row gap minus half a dot rather than anything to do with the card. Drawn
+   this way rather than as one line on the container because only the row knows
+   where its own dot is, and a container line has to guess at both ends.
+   The visually-last row would otherwise trail a stub into empty space, and
+   which row that is depends on the page: archives wrap in a column-reverse
+   wrapper (DOM first = bottom), tag pages do not. */
+.timeline::before {
+    background: rgba(133, 186, 192, 0.32);
+    bottom: -19px;
+    content: "";
+    left: 7px;
+    position: absolute;
+    top: 11px;
+    width: 1px;
+}
+#timeline-wrap:not(.is-static) > .timeline:first-child::before,
+#timeline-wrap.is-static > .timeline:last-child::before {
+    background: none;
+}
+.timeline-content {
+    background: #fff;
+    border: 1px solid rgba(30, 62, 63, 0.07);
+    border-radius: 16px;
+    box-shadow:
+        0 1px 2px rgba(30, 62, 63, 0.03),
+        0 4px 14px rgba(30, 62, 63, 0.045);
+    margin-left: 30px;
+    padding: 26px 30px;
+    transition: box-shadow 0.35s, border-color 0.35s, transform 0.35s;
+}
+/* The old hover was a 12% black hairline plus a 9% black shadow: at that weight
+   the card darkened rather than lifted. This one keeps the shadow under the card
+   and lets the accent tint it, and the 2px rise does the rest — the same lift the
+   home page's cards make, at a quarter of the distance, since these are a list
+   and not a gallery. */
+.timeline-content:hover {
+    border-color: rgba(133, 186, 192, 0.32);
+    box-shadow:
+        0 2px 4px rgba(30, 62, 63, 0.04),
+        0 10px 26px rgba(146, 116, 176, 0.12);
+    transform: translateY(-2px);
+}
+/* List pages: the rows arrive in reading order, 20ms apart, each one rising into
+   place. Only the card moves — the dot and the rail are the list's scaffold and
+   stay put, so the line never tears as the rows settle.
+   The index is the row's position on screen (archives renders its rows
+   column-reverse, so its template counts backwards); it is capped at 18 there,
+   which is what keeps a 26-post page from taking a second to finish.
+   `backwards`, not `both`: once a row has landed the animation has to stop
+   applying, or its final transform would outrank the card's hover lift.
+   Gated on html.page-loaded (set in main.js when the loader is dismissed): the
+   loader covers the page until `load`, so a statically declared animation would
+   finish behind it and no one would ever see the stagger. */
+@media (prefers-reduced-motion: no-preference) {
+    html.page-loaded #timeline-wrap > .timeline > .timeline-content {
+        animation: timeline-row-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+        /* The 90ms lead-in clears the loader's own fade-out. Without it the first
+           rows were already half-way up behind the last of the white wash, and
+           the stagger read as a smear rather than as rows arriving. */
+        animation-delay: calc(90ms + var(--stagger-i, 0) * 20ms);
+    }
+}
+@keyframes timeline-row-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* The passage a content match grew inside its own row, and the height it opens
+   with. js/lib/search.js measures the block and hands the number to max-height,
+   which is the only way to animate it; in exchange everything spaced inside has
+   to be padding, never margin — scrollHeight is what gets measured, and a
+   child's margin is not reliably part of it, so a margin would clip the last
+   line. */
+.timeline-content .search-excerpts {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+}
+.timeline-content .search-excerpts.shown {
+    opacity: 1;
+}
+.timeline-content .search-excerpt {
+    color: #5c6b72;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 6px 0;
+    white-space: pre-line;
+    word-break: break-all;
+}
+.timeline-content .search-excerpt:first-child {
+    padding-top: 18px; /* the gap below .info above it */
+}
+.timeline-content .search-excerpt-sep {
+    border-top: 1px dashed #e0e0e0;
+    padding-top: 6px;
+}
+.timeline-content .search-excerpts mark {
+    /* the global mark carries line-height 2.5, which would space the marked
+       lines apart from the ones around them */
+    line-height: inherit;
+}
+.timeline-tail {
+    background: #fff;
+    /* The post-title green — the same #85bac0 the home page's titles and the
+       Contents panel heading use — so the dot on the archive timeline reads as
+       belonging to the titles it sits beside rather than as an accent of its own.
+       It was #a5c2f5, a periwinkle with no other source in the palette.
+       Pinned to where the rail runs (left 7px, see .timeline::before) instead of
+       being left at its static position, so the dot sits ON the line rather than
+       beside it; the white halo is the rail being knocked out behind the dot,
+       which is what keeps the line from showing through the ring. */
+    border: 1.5px solid #85bac0;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.95);
+    height: 8px;
+    left: 3px;
+    position: absolute;
+    top: 7px;
+    width: 8px;
+}
+::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+}
+::-webkit-scrollbar-thumb {
+    background: #cca4e3
+        linear-gradient(
+            45deg,
+            #fff6 25%,
+            transparent 25%,
+            transparent 50%,
+            #fff6 50%,
+            #fff6 75%,
+            transparent 75%,
+            transparent
+        );
+    border: 3px solid #f7f0fb;
+    border-radius: 100px;
+}
+::-webkit-scrollbar-track {
+    background: #f7f0fb;
+    border-radius: 100px;
+}
+::selection {
+    background: rgba(255, 162, 196, 0.18);
+    color: #1e3e3f;
+}
+
+/* Liquid glass selection for Firefox */
+::-moz-selection {
+    background: rgba(255, 162, 196, 0.18);
+    color: #1e3e3f;
+}
+a {
+    color: #dfa4c9;
+    text-decoration: none;
+}
+/* In-prose links keep the theme's own rose (a { color: #dfa4c9 }) and no
+   underline: the deeper rose + rule that used to be here made every link look
+   like a citation, which is not what the prose is doing. */
+/* Keyboard focus, for the whole site. The default Chromium ring is a blue that
+   appears nowhere in the palette and lands on the glass panels as a hard box;
+   this is the accent teal, offset far enough to clear a card's rounded rim. */
+:focus-visible {
+    outline: 2px solid rgba(103, 153, 160, 0.9);
+    outline-offset: 3px;
+}
+/* The search bar draws its own focus glow (see #search-bar:focus) and a ring on
+   top of it reads as a double border. */
+#search-bar:focus-visible,
+.input:focus-visible {
+    outline: none;
+}
+a:hover,
+.code-toggle:hover,
+.content .copycode:hover {
+    opacity: 0.8;
+}
+audio,
+button,
+iframe,
+img,
+video,
+#home-head,
+#menu,
+.categories-tags a,
+.code-toggle,
+.copycode,
+.friend-link a,
+.more-center,
+.hljs-ln-numbers,
+.icon-link a,
+.katex,
+.language,
+.page-current {
+    user-select: none;
+}
+b,
+strong {
+    font-weight: bold;
+    /* inherit, not a number. An inline box taller than the line it sits in opens
+       THAT line up, so every paragraph carrying a bold word or a code chip came
+       out with two line heights in it — visibly airier around the emphasis.
+       2.5 was the old value, sized for the chip look; the chip now gets its
+       height from padding instead. */
+    line-height: inherit;
+}
+blockquote {
+    background: #ffd7f32d;
+    border-left: 3px solid #ebb2d6a9;
+    border-radius: 3px;
+    margin: 15px 0;
+    overflow: auto;
+    padding: 0 15px;
+}
+body {
+    /* Both are overridden per load on the home page by js/lib/home.js, which
+       tints them to match the wallpaper it picked. These values are the
+       fallback — keep them a neutral light so the other pages still read as
+       before.
+       Deliberately NOT transitioned: home.js sets these in the same frame as the
+       wallpaper, so animating them would show up as a second fade settling in
+       underneath the hero's own one.
+       --page-bg is the page, and everything that sits on a white card and needs
+       a tint of its own fills with it — the card rims, the MORE pill, the
+       collapse arrow. --tint-deep is the same hue a few stops deeper: the hero
+       dissolves into that, and the same chrome goes to it on hover. One sampled
+       hue drives both, so nothing has to invent a blue of its own. */
+    --page-bg: #f6f8fa;
+    --tint-deep: #f6f8fa;
+    background: var(--page-bg);
+    color: #1e3e3f;
+    font: 500 14px Lexend, "Noto Sans SC", sans-serif;
+    overflow-x: hidden;
+    width: 100%;
+}
+code {
+    background: #ffdef6b8;
+    border-radius: 5px;
+    /* The chip is drawn with padding on a box that does not push its line apart:
+       inherit keeps the inline box at the paragraph's own line height, and a
+       slightly smaller font keeps the Fira Code glyphs from reading larger than
+       the Noto Sans SC they sit between. */
+    font-size: 0.93em;
+    line-height: inherit;
+    padding: 0.12em 0.36em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #1e3e3f;
+    font-weight: bold;
+    margin: 15px 0;
+    word-break: keep-all;
+}
+h1 {
+    font-size: 30px;
+}
+h2 {
+    font-size: 27px;
+}
+h3 {
+    font-size: 24px;
+}
+h4 {
+    font-size: 21px;
+}
+h5 {
+    font-size: 18px;
+}
+h6 {
+    font-size: 15px;
+}
+hr {
+    border-style: dashed none none;
+    border-width: 1.5px;
+}
+img,
+video,
+audio,
+iframe {
+    border-radius: 10px;
+}
+mark {
+    background: #fff13360;
+    border-radius: 5px;
+    color: unset;
+    line-height: inherit;
+    padding: 0.12em 0.36em;
+}
+p,
+ul,
+ol {
+    /* Back to the stock 1.7 with the stock 15px body: the two were calibrated
+       together, and a wider setting than this reads as airy rather than readable. */
+    line-height: 1.7;
+    margin: 15px 0;
+}
+pre {
+    /* Opaque, so the block's outline is where its own fill stops rather than
+       wherever a hairline happens to land. The rim below is a cool #ebeef5 and
+       the card it sits on is tinted to the wallpaper (home.js repaints
+       --page-bg on every load), which leaves the rim LIGHTER than the surface
+       behind it on a warm-toned wallpaper — the fill is what actually draws the
+       block's edge. An area edge also holds its weight when the card around it
+       is re-composited, as it is on hover (the card is translated and its shadow
+       deepened), where a 1px line can thin out or shift instead. */
+    background: #fff;
+    border: 1px solid #ebeef5;
+    border-radius: 15px;
+    box-shadow: 0 2px 12px 0 #0000001a;
+    margin: 25px 0;
+    overflow: hidden;
+    white-space: normal;
+}
+/* The inline chip's recipe, cancelled inside a block. Without this the pink wash
+   and the padding land on the <code> that wraps a whole listing — highlight.js
+   then builds its line table inside it, so the wash paints behind nothing and
+   the padding shows up as a stray inset around the table. */
+pre code {
+    background: none;
+    border-radius: 0;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 0;
+}
+pre,
+code,
+.hljs,
+.input,
+.language {
+    font-family: "Fira Code", "Noto Sans SC", monospace;
+}
+/* auto, not 0. A table shrinks to fit its columns, and its side margins are the
+   only thing that then decides where it sits in the text column — at 0 it hangs
+   off the left edge, which is what an article table looks like when it is not
+   centred. A table too wide for the column is unaffected: auto margins resolve
+   to 0 when there is no room to give, so it still starts at the left edge rather
+   than being pushed out of view on one side. */
+table:not(.hljs-ln) {
+    margin: 15px auto;
+}
+table:not(.hljs-ln) td:nth-child(even) {
+    background: #db9ec521;
+}
+table:not(.hljs-ln) td:nth-child(odd) {
+    background: #e0adce1a;
+}
+table:not(.hljs-ln) th {
+    background: #ea97cd41;
+}
+table:not(.hljs-ln) tr th,
+table:not(.hljs-ln) tr td {
+    border-radius: 3px;
+    padding: 10px 20px;
+}
+ul li,
+ol li {
+    margin: 8px 0;
+}
+@keyframes loop1 {
+    from {
+        transform: rotate(30deg);
+    }
+    to {
+        transform: rotate(390deg);
+    }
+}
+@keyframes loop2 {
+    from {
+        transform: rotate(60deg);
+    }
+    to {
+        transform: rotate(420deg);
+    }
+}
+@keyframes loop3 {
+    from {
+        transform: rotate(90deg);
+    }
+    to {
+        transform: rotate(450deg);
+    }
+}
+@keyframes loop4 {
+    from {
+        transform: rotate(120deg);
+    }
+    to {
+        transform: rotate(480deg);
+    }
+}
+@media (min-width: 900px) {
+    #home-head #home-info .info .wrap {
+        padding: 25px;
+        /* The title sits on the wallpaper, and a wallpaper is not a backdrop: it
+           goes light and dark behind a single line of type, so the ink reads
+           crisp in one place and smudged in another and the type ends up looking
+           as uneven as the picture behind it. A shadow is what evens that out
+           without hiding the picture — it gives the glyph edge something to sit
+           on — and the hairline of light under it keeps the edge from going soft
+           where the wallpaper behind it is light.
+           Both are tight on purpose: a wide, soft shadow under type reads as a
+           blur, which is the thing being fixed.
+           This is desktop only. Below here the loops are hidden and .info is a
+           white disc, and type on a flat disc has nothing to separate from. */
+        text-shadow:
+            0 1px 2px rgba(12, 40, 42, 0.35),
+            0 0 1px rgba(255, 255, 255, 0.5);
+    }
+    #home-head #home-info .info .wrap h1 {
+        font-size: 52px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    #home-head #home-info .info .wrap h3 {
+        font-size: 24px;
+        margin: 10px 0;
+    }
+    #home-head #home-info .info .wrap h5 {
+        font-size: 16px;
+        margin: 20px 0;
+    }
+    /* The title is pinned to one line, and it is close to the edge of the space
+       it has: at its 52px its own width is 439px of the 450px the disc leaves,
+       and the font is a webfont, so that number is not ours to assume. Anything
+       that makes the line wider — a longer title, a tracking, a fallback font
+       with wider glyphs — used to push it onto two lines, and the second line
+       lands outside the rings the title is meant to sit in. So it does not wrap:
+       see the width before changing this.
+       The tracking below is for the smaller lines only. The title cannot take
+       one, and does not need it. */
+    #home-head #home-info .info .wrap h1 {
+        white-space: nowrap;
+    }
+    #home-head #home-info .info .wrap h3,
+    #home-head #home-info .info .wrap h5 {
+        font-weight: 500;
+        letter-spacing: 0.75px;
+    }
+    #home-head #home-info .loop {
+        display: inline-block;
+        height: 500px;
+        position: absolute;
+        width: 500px;
+    }
+    #home-head #home-info,
+    #home-head #home-info .info {
+        height: 500px;
+        width: 500px;
+    }
+    #home-posts {
+        margin-right: 50px;
+        width: 850px;
+    }
+    #home-posts .post {
+        margin-bottom: 25px;
+        padding: 50px;
+    }
+    #home-posts .post .description {
+        padding: 20px 0;
+    }
+    #home-posts-wrap {
+        max-width: 1200px;
+    }
+    #menu #mobile-menu {
+        display: none;
+    }
+    .article,
+    #archives,
+    #friends,
+    #footer #footer-wrap {
+        width: 900px;
+    }
+    .home-posts-wrap-no-card #home-posts {
+        margin: auto;
+    }
+    ul,
+    ol {
+        padding-left: 40px;
+    }
+}
+@media (min-width: 900px) and (max-width: 1200px) {
+    #home-card {
+        display: none;
+    }
+    #home-posts {
+        width: 100%;
+    }
+    #home-posts-wrap,
+    #archives {
+        width: 800px;
+    }
+}
+@media (max-width: 900px) {
+    #home-head #home-info {
+        height: 350px;
+        width: 350px;
+    }
+    #home-head #home-info .info {
+        align-items: center;
+        background: #ffffffa6;
+        display: flex;
+        height: 350px;
+        justify-content: center;
+        margin: auto;
+        width: 350px;
+    }
+    #home-head #home-info .info .wrap {
+        padding: 50px;
+    }
+    #home-head #home-info .info .wrap h1 {
+        font-size: 46px;
+        margin-bottom: 10px;
+    }
+    #home-head #home-info .info .wrap h3 {
+        font-size: 20px;
+        margin: 10px 0;
+    }
+    #home-head #home-info .info .wrap h5 {
+        font-size: 14px;
+        margin: 20px 0;
+    }
+    #home-head #home-info .loop {
+        display: none;
+        height: 350px;
+        position: absolute;
+        width: 350px;
+    }
+    #home-posts {
+        margin: auto;
+        width: 100%;
+    }
+    #home-posts .post {
+        margin-bottom: 30px;
+        padding: 20px 30px;
+    }
+    #home-posts .post .description {
+        padding: 20px 0;
+    }
+    /* keep the corner arrow clear of long titles on narrow screens */
+    #home-posts .post .collapse-arrow {
+        height: 28px;
+        right: 14px;
+        top: 14px;
+        width: 28px;
+    }
+    #home-posts .post .post-tags {
+        padding-right: 69px;
+    }
+    #home-posts-wrap,
+    .article,
+    #archives,
+    #friends,
+    #footer #footer-wrap {
+        width: 100%;
+    }
+    #friends .friend-card {
+        border-radius: 15px;
+        padding: 20px;
+    }
+    #friends .friend-avatar {
+        height: 60px;
+        margin-right: 15px;
+        width: 60px;
+    }
+    #friends .friend-go span {
+        display: none;
+    }
+    #friends .friend-go {
+        border-radius: 15px 0;
+        margin-left: 12px;
+        padding: 10px 14px;
+    }
+    #logs .log-entry {
+        gap: 16px;
+        padding: 18px 0;
+    }
+    #logs .log-date {
+        width: 75px;
+    }
+    #logs .log-date-text {
+        font-size: 13px;
+    }
+    #logs .log-tagline {
+        font-size: 11px;
+    }
+    #moments .moments-head {
+        gap: 12px;
+        padding-bottom: 20px;
+    }
+    #moments .moments-avatar {
+        height: 46px;
+        width: 46px;
+    }
+    #moments .moment {
+        padding: 20px 0;
+    }
+    #moments .moment-content p,
+    #moments .moment-content li {
+        font-size: 14px;
+    }
+    #moments .moment-images {
+        gap: 4px;
+        max-width: 100%;
+    }
+    #moments .moment-images.is-single {
+        max-width: 80%;
+    }
+    #moments .moment-media {
+        max-width: none;
+    }
+    #moments .moment-media-cover {
+        height: 56px;
+        width: 56px;
+    }
+    #moments .moment-media-title {
+        font-size: 13px;
+    }
+    #menu #desktop-menu,
+    #home-card {
+        display: none;
+    }
+    #menu #mobile-menu {
+        display: block;
+    }
+    ul,
+    ol {
+        padding-left: 20px;
+    }
+}

@@ -1,0 +1,14 @@
+---
+/** The About page — a page rendered through post.ejs in Hexo, with no title. */
+import Base from "../layouts/Base.astro";
+import Article from "../components/Article.astro";
+import { site } from "../site.config.js";
+import { getPage } from "../lib/content.js";
+
+const page = getPage("about");
+const title = `${page.headTitle || page.title} | ${site.title}`;
+---
+
+<Base type="post" title={title}>
+    <Article post={page} isPage showToc={page.toc} />
+</Base>

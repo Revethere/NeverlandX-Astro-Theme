@@ -1,0 +1,67 @@
+---
+/** The home page's side card — a port of card.ejs. */
+import { site, theme } from "../site.config.js";
+import { getStats } from "../lib/content.js";
+import { renderMarkdown } from "../lib/markdown.js";
+
+const stats = getStats();
+const iconLinks = Object.entries(theme.card.iconLinks || {});
+---
+
+<div id="card-style">
+    <div id="card-div">
+        <div class="avatar">
+            <img src={theme.avatar} alt="avatar" />
+        </div>
+        <div class="name">{site.author}</div>
+        <div class="description" set:html={renderMarkdown(theme.card.description)} />
+
+        {
+            iconLinks.length > 0 && (
+                <div class="icon-links">
+                    {iconLinks.map(([, value]) => (
+                        <span class="icon-link">
+                            <a href={value.link}>
+                                <i class={`fa-${value.theme} fa-${value.name} fa-fw`} />
+                            </a>
+                        </span>
+                    ))}
+                </div>
+            )
+        }
+
+        <div class="statistics">
+            <div class="stat-item">
+                <span class="stat-num">{stats.posts}</span>
+                <span class="stat-label">Posts</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num">{stats.words}k</span>
+                <span class="stat-label">Words</span>
+            </div>
+            <div class="stat-item">
+                <span
+                    class="stat-num"
+                    id="stat-days"
+                    data-start-date={theme.card.daysSince}>{stats.days}</span
+                >
+                <span class="stat-label">Days</span>
+            </div>
+        </div>
+
+        <!-- The counter is baked in at build time; this corrects it to the
+             visitor's clock (and survives a long-lived cached page). -->
+        <script is:inline>
+            (function () {
+                var el = document.getElementById("stat-days");
+                if (!el) return;
+                var startDate = el.getAttribute("data-start-date");
+                if (!startDate) return;
+                var days = Math.floor(
+                    (Date.now() - new Date(startDate + "T00:00:00").getTime()) / 86400000
+                );
+                el.textContent = days;
+            })();
+        </script>
+    </div>
+</div>

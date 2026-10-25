@@ -1,0 +1,40 @@
+---
+/** Site footer — a port of footer.ejs. */
+import { site, theme } from "../site.config.js";
+
+const year = new Date().getFullYear();
+---
+
+<footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy; {theme.footer.since} - {year} {site.title}{" "}
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>{" "}
+            &commat;{site.author}
+        </div>
+        <div>
+            Based on the{" "}
+            <a target="_blank" rel="noopener" href="https://astro.build">Astro</a>{" & "}
+            <a
+                target="_blank"
+                rel="noopener"
+                href="https://github.com/theme-particlex/hexo-theme-particlex"
+                >ParticleX Theme</a
+            >
+        </div>
+        {
+            theme.footer.icp.enable && (
+                <div>
+                    备案号：
+                    {theme.footer.icp.link ? (
+                        <a href={theme.footer.icp.link}>{theme.footer.icp.code}</a>
+                    ) : (
+                        theme.footer.icp.code
+                    )}
+                </div>
+            )
+        }
+    </div>
+</footer>

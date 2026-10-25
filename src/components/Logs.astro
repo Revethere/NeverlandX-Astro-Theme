@@ -1,0 +1,53 @@
+---
+/**
+ * The changelog — a port of logs.ejs.
+ *
+ * The page body is not one article: it is a run of `## <date>` sections, each
+ * with an optional `> tagline` under the date and markdown underneath. Hexo's
+ * layout split the raw markdown on `^## ` and rendered each section separately,
+ * which is why the section headings never appear as headings here.
+ */
+import { renderMarkdown } from "../lib/markdown.js";
+
+const { raw } = Astro.props;
+
+const sections = [];
+const parts = raw.split(/^## /m);
+
+for (let i = 1; i < parts.length; i++) {
+    const lines = parts[i].split("\n");
+    const date = lines[0].trim();
+    let tagline = "";
+    let contentStart = 1;
+
+    if (lines[1] && /^>\s/.test(lines[1])) {
+        tagline = lines[1].replace(/^>\s*/, "").trim();
+        contentStart = 2;
+    }
+
+    const content = lines.slice(contentStart).join("\n").trim();
+    if (date) sections.push({ date, tagline, content });
+}
+---
+
+<div id="logs">
+    <div class="logs-list">
+        {
+            sections.map((section) => (
+                <div class="log-entry">
+                    <div class="log-date">
+                        <span class="log-date-text">{section.date}</span>
+                        {section.tagline && (
+                            <span class="log-tagline">{section.tagline}</span>
+                        )}
+                    </div>
+                    <div class="log-content">
+                        {section.content && (
+                            <Fragment set:html={renderMarkdown(section.content)} />
+                        )}
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+</div>

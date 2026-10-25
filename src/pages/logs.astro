@@ -1,0 +1,14 @@
+---
+/** The changelog page. */
+import Base from "../layouts/Base.astro";
+import Logs from "../components/Logs.astro";
+import { site } from "../site.config.js";
+import { getPage } from "../lib/content.js";
+
+const page = getPage("logs");
+const title = `${page.headTitle || page.title} | ${site.title}`;
+---
+
+<Base type="logs" title={title}>
+    <Logs raw={page.raw} />
+</Base>

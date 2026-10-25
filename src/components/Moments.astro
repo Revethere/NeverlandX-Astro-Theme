@@ -1,0 +1,183 @@
+---
+/**
+ * The Moments stream — WeChat-style micro-posts in the logs page's clothes.
+ *
+ * Deliberately shell-free: no `.article` card, no title block, no comments. The
+ * whole page is a masthead and a hairline-separated list, and each entry prints
+ * its time (plus an optional location) at the bottom the way WeChat does.
+ *
+ * The avatar question is answered twice over: one avatar in the masthead, and
+ * `theme.moments.entryAvatar` (default off) if the per-entry face ever feels
+ * right — a personal blog repeats the same face, so the default keeps it once.
+ */
+import { site, theme } from "../site.config.js";
+import { getMomentIndex, getMoments, monthKey, monthLabel } from "../lib/moments.js";
+import MomentMedia from "./MomentMedia.astro";
+
+const { raw } = Astro.props;
+const entries = getMoments(raw);
+
+const moments = theme.moments || {};
+const entryAvatar = moments.entryAvatar === true;
+
+// The stamp prints `18 Aug`, and only adds the year when it is not this year's.
+// Baked at build time; the little script below re-checks it against the reader's
+// clock so the label stays right across a New Year without a rebuild.
+const thisYear = String(new Date().getFullYear());
+
+// The calendar links to the newest entry of each month, so exactly one article
+// per month carries that month's anchor.
+const calendar = getMomentIndex(entries);
+const anchored = new Set();
+const anchors = entries.map((entry) => {
+    const key = monthKey(entry);
+    if (!key || anchored.has(key)) return undefined;
+    anchored.add(key);
+    return `m-${key}`;
+});
+---
+
+<div id="moments">
+    <div class="moments-column">
+        {
+            calendar.length > 0 && (
+                <aside class="moments-calendar">
+                    <button
+                        class="moments-calendar-toggle"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="moments-calendar-panel"
+                        aria-label="按月份查找"
+                        title="按月份查找"
+                    >
+                        <i class="fa-solid fa-calendar-days" aria-hidden="true" />
+                    </button>
+                    <div class="moments-calendar-panel" id="moments-calendar-panel">
+                        {calendar.map((year) => (
+                            <div class="moments-calendar-year">
+                                <div class="moments-calendar-year-label">{year.year}</div>
+                                {year.months.map((month) => (
+                                    <a
+                                        class="moments-calendar-month"
+                                        href={`#${month.anchor}`}
+                                        data-anchor={month.anchor}
+                                    >
+                                        {monthLabel(month.month)}
+                                    </a>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                </aside>
+            )
+        }
+        <div class="moments-stream">
+            <header class:list={["moments-head", { "no-avatar": entryAvatar }]}>
+                {/* One face per screen: if the entries carry the avatar, the masthead
+                    drops it rather than showing the same 40px photo twice. */}
+                {!entryAvatar && <img class="moments-avatar" src={theme.avatar} alt={site.author} />}
+                <div class="moments-ident">
+                    <div class="moments-name">{site.author}</div>
+                    {moments.note && <div class="moments-note">{moments.note}</div>}
+                </div>
+            </header>
+
+        {
+            entries.map((entry, index) => (
+                <article class="moment" id={anchors[index]}>
+                    <div class="moment-body">
+                        {entryAvatar && (
+                            <img class="moment-avatar" src={theme.avatar} alt={site.author} />
+                        )}
+                        <div class="moment-content">
+                            {entry.blocks.map((block) =>
+                                block.type === "images" ? (
+                                    <div
+                                        class:list={["moment-images", { "is-single": block.single }]}
+                                        style={`--cols: ${block.columns}; --tile: ${
+                                            block.columns === 2 ? 200 : 176
+                                        }px`}
+                                    >
+                                        {block.images.map((image) => (
+                                            <img src={image.src} alt={image.alt} loading="lazy" />
+                                        ))}
+                                    </div>
+                                ) : block.type === "media" ? (
+                                    <MomentMedia media={block.media} />
+                                ) : (
+                                    <Fragment set:html={block.html} />
+                                ),
+                            )}
+                        </div>
+                    </div>
+                    <footer class="moment-meta">
+                        {entry.iso ? (
+                            <time datetime={entry.iso} data-year={entry.year}>
+                                {entry.day} {entry.month}
+                                <span class="moment-year" hidden={entry.year === thisYear}>
+                                    {" "}
+                                    {entry.year}
+                                </span>
+                                {entry.clock ? ` ${entry.clock}` : ""}
+                            </time>
+                        ) : (
+                            <span>{entry.label}</span>
+                        )}
+                        {entry.location && (
+                            <span class="moment-place">
+                                <i class="fa-solid fa-location-dot fa-fw" />
+                                {entry.location}
+                            </span>
+                        )}
+                    </footer>
+                </article>
+            ))
+        }
+        </div>
+    </div>
+</div>
+
+<script>
+    // The month index: only the button opens and closes it. Clicking a month
+    // jumps to that month but leaves the panel open, and an outside click or
+    // Escape does nothing, so the list stays put while it is being used.
+    const calendar = document.querySelector<HTMLElement>(".moments-calendar");
+
+    if (calendar) {
+        const toggle = calendar.querySelector<HTMLButtonElement>(".moments-calendar-toggle");
+        // The fixed menu covers the top of the page, so an anchor jump has to stop
+        // short of it by roughly the menu's height.
+        const MENU_CLEARANCE = 110;
+
+        const setOpen = (open: boolean) => {
+            calendar.classList.toggle("is-open", open);
+            toggle?.setAttribute("aria-expanded", String(open));
+        };
+
+        toggle?.addEventListener("click", () => {
+            setOpen(!calendar.classList.contains("is-open"));
+        });
+
+        calendar.querySelectorAll<HTMLAnchorElement>(".moments-calendar-month").forEach((link) => {
+            link.addEventListener("click", (event) => {
+                const anchor = link.dataset.anchor;
+                const target = anchor ? document.getElementById(anchor) : null;
+                if (!target) return;
+                event.preventDefault();
+                window.scrollTo({
+                    top: target.getBoundingClientRect().top + window.scrollY - MENU_CLEARANCE,
+                    behavior: "smooth",
+                });
+            });
+        });
+    }
+
+    // The stamp drops the year when it is this year's. The build bakes one "this
+    // year", so re-check against the reader's clock: a site that was last built in
+    // December still shows last year's entries without a year until January.
+    const liveYear = String(new Date().getFullYear());
+    document.querySelectorAll<HTMLElement>(".moment-meta time[data-year]").forEach((time) => {
+        const year = time.querySelector<HTMLElement>(".moment-year");
+        if (year) year.hidden = time.dataset.year === liveYear;
+    });
+</script>

@@ -1,0 +1,14 @@
+---
+/** Home page, page 1 — a port of the index_generator's first page. */
+import Base from "../layouts/Base.astro";
+import Home from "../components/Home.astro";
+import { site } from "../site.config.js";
+import { getListedPosts } from "../lib/content.js";
+
+const posts = getListedPosts();
+const total = Math.max(1, Math.ceil(posts.length / site.perPage));
+---
+
+<Base type="index" title={site.title}>
+    <Home posts={posts.slice(0, site.perPage)} page={1} total={total} />
+</Base>

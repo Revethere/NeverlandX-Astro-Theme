@@ -1,0 +1,17 @@
+---
+/**
+ * The Moments page — content/pages/moments.md holds the stream itself; see
+ * lib/moments.js for the syntax and components/Moments.astro for the markup.
+ */
+import Base from "../layouts/Base.astro";
+import Moments from "../components/Moments.astro";
+import { site } from "../site.config.js";
+import { getPage } from "../lib/content.js";
+
+const page = getPage("moments");
+const title = `${page.headTitle || page.title} | ${site.title}`;
+---
+
+<Base type="moments" title={title}>
+    <Moments raw={page.raw} />
+</Base>

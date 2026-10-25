@@ -1,0 +1,56 @@
+---
+/** Home page pager — a port of current.ejs. */
+const { page, total } = Astro.props;
+
+const href = (n) => (n === 1 ? "/" : `/page/${n}/`);
+---
+
+<div class="page-current">
+    {
+        page !== 1 && (
+            <>
+                <a class="page-num" href={href(page - 1)}>
+                    <i class="fa-solid fa-caret-left fa-fw" />
+                </a>
+                <a class="page-num" href="/">
+                    1
+                </a>
+                <span class="page-omit">...</span>
+            </>
+        )
+    }
+
+    <span class="current">{page}</span>
+
+    {
+        page + 1 <= total && (
+            <a class="page-num" href={href(page + 1)}>
+                {page + 1}
+            </a>
+        )
+    }
+    {
+        page + 2 <= total && (
+            <a class="page-num" href={href(page + 2)}>
+                {page + 2}
+            </a>
+        )
+    }
+    {
+        page + 3 <= total && (
+            <>
+                <span class="page-omit">...</span>
+                <a class="page-num" href={href(total)}>
+                    {total}
+                </a>
+            </>
+        )
+    }
+    {
+        page !== total && (
+            <a class="page-num" href={href(page + 1)}>
+                <i class="fa-solid fa-caret-right fa-fw" />
+            </a>
+        )
+    }
+</div>

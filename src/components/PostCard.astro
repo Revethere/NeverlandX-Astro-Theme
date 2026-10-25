@@ -1,0 +1,107 @@
+﻿---
+/**
+ * One post card on the home page — a port of the loop in posts.ejs.
+ *
+ * With no `description` front matter and no `<!-- more -->` marker a card is
+ * "single": the excerpt is the whole rendered post, clamped by CSS, and MORE
+ * simply unclamps it. That is the mode every current post uses.
+ */
+import { contentOf } from "../lib/content.js";
+import { renderMarkdown } from "../lib/markdown.js";
+
+const { post } = Astro.props;
+
+const moreAt = post.raw.indexOf("<!-- more -->");
+const hasMoreTag = moreAt !== -1;
+const hasDescription = post.description !== undefined;
+const isSingle = !hasDescription && !hasMoreTag;
+
+const html = contentOf(post);
+const excerpt = hasDescription
+    ? renderMarkdown(post.description)
+    : hasMoreTag
+      ? renderMarkdown(post.raw.slice(0, moreAt))
+      : html;
+---
+
+<div
+    class="post"
+    data-has-more={String(hasMoreTag)}
+    data-single={isSingle ? "true" : undefined}
+>
+    <a href={post.href}>
+        <h2 class="post-title">{post.title}</h2>
+    </a>
+
+    <div class="category-and-date">
+        {
+            post.category && (
+                <span class="category">
+                    <a href={post.category.href}>
+                        <span class="icon">
+                            <i class="fa-solid fa-bookmark fa-fw" />
+                        </span>
+                        {post.category.name}
+                    </a>
+                </span>
+            )
+        }
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw" />
+            </span>
+            {post.date.label}
+        </span>
+        {
+            post.pinned !== undefined && (
+                <span class="special">
+                    <i class="fa-solid fa-grip-vertical fa-fw" />
+                </span>
+            )
+        }
+    </div>
+
+    <div class="description">
+        <div class="excerpt-content" set:html={excerpt} />
+        {
+            hasMoreTag && !isSingle && (
+                <div class="full-content" style="display: none" set:html={html} />
+            )
+        }
+    </div>
+
+    <div class="post-tags">
+        {
+            post.tags.length > 0 && (
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw" />
+                </span>
+            )
+        }
+        {
+            post.tags.map((tag) => (
+                <span class="tag">
+                    <a href={tag.href} data-color-key={tag.name} data-color-prop="color">
+                        {tag.name}
+                    </a>
+                </span>
+            ))
+        }
+    </div>
+
+    {
+        (hasMoreTag || isSingle) && (
+            <>
+                <div class="more-center">
+                    <span class="more-text">MORE</span>
+                    <span class="more-icon">
+                        <i class="fa-solid fa-chevron-down" />
+                    </span>
+                </div>
+                <div class="collapse-arrow" title="收起文章">
+                    <i class="fa-solid fa-chevron-up" />
+                </div>
+            </>
+        )
+    }
+</div>

@@ -1,0 +1,78 @@
+﻿---
+/** The article column — a port of post.ejs (used for posts and for pages). */
+import { contentOf } from "../lib/content.js";
+
+const { post, isPage = false, showToc = true } = Astro.props;
+const html = contentOf(post);
+---
+
+<div class={`article-wrap${showToc ? "" : " article-wrap-no-toc"}`}>
+    <div class="article">
+        {
+            post.title && (
+                <div class="article-title">
+                    <h1>{post.title}</h1>
+                </div>
+            )
+        }
+
+        <div class="info">
+            {
+                !isPage && post.date && (
+                    <span class="date">
+                        <span class="icon">
+                            <i class="fa-solid fa-calendar fa-fw" />
+                        </span>
+                        {post.date.label}
+                    </span>
+                )
+            }
+            {
+                post.category && (
+                    <span class="category">
+                        <a href={post.category.href}>
+                            <span class="icon">
+                                <i class="fa-solid fa-bookmark fa-fw" />
+                            </span>
+                            {post.category.name}
+                        </a>
+                    </span>
+                )
+            }
+            {
+                post.tags && post.tags.length > 0 && (
+                    <span class="tags">
+                        <span class="icon">
+                            <i class="fa-solid fa-tags fa-fw" />
+                        </span>
+                        {post.tags.map((tag) => (
+                            <span class="tag">
+                                <a
+                                    href={tag.href}
+                                    data-color-key={tag.name}
+                                    data-color-prop="color"
+                                >
+                                    {tag.name}
+                                </a>
+                            </span>
+                        ))}
+                    </span>
+                )
+            }
+        </div>
+
+        <div class="content" set:html={html} />
+    </div>
+
+    {
+        showToc && (
+            <div class="article-side" style="display:none">
+                <div class="article-side-title">
+                    <i class="fa-solid fa-list-ul fa-fw" />
+                    &ensp;Contents
+                </div>
+                <div class="article-side-toc" />
+            </div>
+        )
+    }
+</div>

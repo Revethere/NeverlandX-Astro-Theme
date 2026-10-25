@@ -1,0 +1,48 @@
+---
+/** The friend links grid — a port of friends.ejs. */
+import { theme } from "../site.config.js";
+
+const friends = theme.friends || [];
+---
+
+<div id="friends">
+    {
+        friends.length > 0 ? (
+            <div class="friend-list">
+                {friends.map((friend) => (
+                    <div class="friend-card">
+                        <a
+                            href={friend.link}
+                            target="_blank"
+                            rel="noopener"
+                            class="friend-avatar"
+                        >
+                            <img src={friend.avatar} alt={friend.name} />
+                        </a>
+                        <div class="friend-info">
+                            <a
+                                href={friend.link}
+                                target="_blank"
+                                rel="noopener"
+                                class="friend-name"
+                            >
+                                {friend.name}
+                            </a>
+                            {friend.description && (
+                                <div class="friend-desc">{friend.description}</div>
+                            )}
+                        </div>
+                        <a href={friend.link} target="_blank" rel="noopener" class="friend-go">
+                            <i class="fa-solid fa-arrow-up-right-from-square fa-fw" />
+                            <span>Visit</span>
+                        </a>
+                    </div>
+                ))}
+            </div>
+        ) : (
+            <div class="friend-empty">
+                <p>暂无友链</p>
+            </div>
+        )
+    }
+</div>

@@ -1,0 +1,168 @@
+---
+/**
+ * The document shell — a port of the theme's layout/layout.ejs and import.ejs.
+ *
+ * `type` is the theme's own page-type string, because it decides three things
+ * at once: which body partial renders, which optional scripts load, and the
+ * document title. The values are the ones layout.ejs computed:
+ *   index | post | friends | logs | archives | tags | categories
+ */
+import { site, theme } from "../site.config.js";
+import Menu from "../components/Menu.astro";
+import Footer from "../components/Footer.astro";
+
+const { type = "post", title = site.title } = Astro.props;
+
+// The client-side tag colour picker reads this. `<` is escaped so the JSON can
+// never close the script tag early.
+const tagColorConfig = JSON.stringify({
+    palette: theme.colors || [],
+    scheme: theme.tagColors.scheme,
+    salt: theme.tagColors.salt || "",
+    avoidAdjacentDuplicates: theme.tagColors.avoidAdjacentDuplicates !== false,
+}).replace(/</g, "\\u003c");
+---
+
+<!doctype html>
+<html lang={site.language}>
+    <head>
+        <meta charset="utf-8" />
+        <title>{title}</title>
+        <meta name="author" content={site.author} />
+        <meta name="description" content={site.description} />
+        <meta name="keywords" content={site.keywords} />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+        />
+        <link rel="icon" href={theme.avatar} />
+
+        <link rel="preconnect" href="https://s4.zstatic.net" />
+        <link
+            rel="stylesheet"
+            href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.cn" />
+        <link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+        />
+
+        <!-- The theme's client runtime used to be a Vue app. The libs below still
+             register themselves into this registry; /js/main.js drives them. -->
+        <script is:inline>
+            const mixins = {};
+        </script>
+
+        {theme.polyfill.enable && (
+            <script
+                is:inline
+                src={`https://polyfill.alicdn.com/v3/polyfill.min.js?features=${[
+                    ...theme.polyfill.features,
+                ].join(",")}`}
+            />
+        )}
+
+        {theme.highlight.enable && (
+            <>
+                <script
+                    is:inline
+                    src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+                />
+                <script
+                    is:inline
+                    src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"
+                />
+                <link
+                    rel="stylesheet"
+                    href={`https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/${theme.highlight.style}.min.css`}
+                />
+                <script is:inline src="/js/lib/highlight.js" />
+            </>
+        )}
+
+        {theme.math.enable && (
+            <>
+                <script is:inline src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.js" />
+                <script
+                    is:inline
+                    src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+                />
+                <link
+                    rel="stylesheet"
+                    href="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.css"
+                />
+                <script is:inline src="/js/lib/math.js" />
+            </>
+        )}
+
+        {theme.preview.enable && <script is:inline src="/js/lib/preview.js" />}
+
+        {type === "archives" && theme.search.enable && (
+            <>
+                <script is:inline src="/js/lib/posts-data.js" />
+                <script is:inline src="/js/lib/search.js" />
+            </>
+        )}
+
+        {type === "index" && <script is:inline src="/js/lib/home.js" />}
+        {type === "post" && <script is:inline src="/js/lib/toc.js" />}
+
+        <script is:inline src="/js/lib/reveal.js" />
+
+        <link rel="stylesheet" href="/css/main.css" />
+    </head>
+    <body>
+        <div id="layout">
+            <div id="loading">
+                <div id="loading-circle">
+                    <span class="ring-orbit" aria-hidden="true">
+                        <i style="--a: 24deg; --s: 7px"></i>
+                        <i style="--a: 148deg; --s: 6px"></i>
+                        <i style="--a: 262deg; --s: 8px"></i>
+                    </span>
+                    <span class="ring-orbit-alt" aria-hidden="true">
+                        <i style="--a: 78deg; --s: 6px"></i>
+                        <i style="--a: 208deg; --s: 7px"></i>
+                    </span>
+                    <h2 id="loading-word" aria-label="LOADING">
+                        {"LOADING".split("").map((letter, i) => (
+                            <span aria-hidden="true" style={`--i: ${i}`}>{letter}</span>
+                        ))}
+                    </h2>
+                </div>
+            </div>
+
+            <Menu />
+
+            <div id="main" class="into-enter-from">
+                <slot />
+                <Footer />
+            </div>
+
+            {theme.preview.enable && (
+                <div id="preview" style="display: none">
+                    <img id="preview-content" />
+                </div>
+            )}
+        </div>
+
+        <script is:inline set:html={`window.__TAG_COLORS__ = ${tagColorConfig};`} />
+        <script is:inline src="/js/lib/colors.js" />
+        <script is:inline src="/js/main.js" />
+
+        <canvas
+            id="background"
+            style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+        ></canvas>
+        <script is:inline src="/js/background.min.js" />
+
+        <canvas
+            id="fireworks"
+            style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+        ></canvas>
+        <script is:inline src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js" />
+        <script is:inline src="/js/fireworks.min.js" />
+    </body>
+</html>

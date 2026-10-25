@@ -1,0 +1,25 @@
+---
+/** A post — a port of post.ejs with `type: post`. */
+import Base from "../../layouts/Base.astro";
+import Article from "../../components/Article.astro";
+import { site } from "../../site.config.js";
+import { contentOf, getPosts } from "../../lib/content.js";
+
+export function getStaticPaths() {
+    return getPosts().map((post) => ({
+        params: { slug: post.slug },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+
+// Touch the renderer here so a broken post fails the build, not a page.
+contentOf(post);
+
+const title = `${post.headTitle || post.title} | ${site.title}`;
+---
+
+<Base type="post" title={title}>
+    <Article post={post} showToc={post.toc} />
+</Base>

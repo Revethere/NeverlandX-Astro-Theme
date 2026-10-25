@@ -1,0 +1,18 @@
+---
+/** All categories — a port of the categories/index.md page rendered by categories.ejs. */
+import Base from "../../layouts/Base.astro";
+import Chips from "../../components/Chips.astro";
+import Timeline from "../../components/Timeline.astro";
+import { site } from "../../site.config.js";
+import { getPage, getCategories } from "../../lib/content.js";
+
+const page = getPage("categories");
+const categories = getCategories();
+---
+
+<Base type="categories" title={`${page.headTitle || page.title} | ${site.title}`}>
+    <div id="archives">
+        <Chips entries={categories} kind="categories" />
+        <Timeline posts={[]} variant="static" />
+    </div>
+</Base>

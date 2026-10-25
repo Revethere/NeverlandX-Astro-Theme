@@ -1,0 +1,14 @@
+---
+/** Friend links page. Comments were off in Hexo and no comment system is on. */
+import Base from "../layouts/Base.astro";
+import Friends from "../components/Friends.astro";
+import { site } from "../site.config.js";
+import { getPage } from "../lib/content.js";
+
+const page = getPage("friends");
+const title = `${page.headTitle || page.title} | ${site.title}`;
+---
+
+<Base type="friends" title={title}>
+    <Friends />
+</Base>

@@ -1,0 +1,32 @@
+---
+/** Home page, pages 2..n — the same body as index.astro, sliced differently. */
+import Base from "../../layouts/Base.astro";
+import Home from "../../components/Home.astro";
+import { site } from "../../site.config.js";
+import { getListedPosts } from "../../lib/content.js";
+
+export function getStaticPaths() {
+    const posts = getListedPosts();
+    const total = Math.max(1, Math.ceil(posts.length / site.perPage));
+    const pages = [];
+
+    for (let page = 2; page <= total; page++) {
+        pages.push({
+            params: { page: String(page) },
+            props: {
+                page,
+                total,
+                posts: posts.slice((page - 1) * site.perPage, page * site.perPage),
+            },
+        });
+    }
+
+    return pages;
+}
+
+const { page, total, posts } = Astro.props;
+---
+
+<Base type="index" title={site.title}>
+    <Home posts={posts} page={page} total={total} />
+</Base>

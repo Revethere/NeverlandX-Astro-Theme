@@ -1,0 +1,34 @@
+---
+/**
+ * One category (or a nested one: `竞赛/高中数学`) — the page the category pills
+ * link to. Empty categories still get a page: they are listed in the pill row.
+ */
+import Base from "../../layouts/Base.astro";
+import Chips from "../../components/Chips.astro";
+import Timeline from "../../components/Timeline.astro";
+import { site } from "../../site.config.js";
+import { getPage, getCategories, sortByDateDesc } from "../../lib/content.js";
+
+export function getStaticPaths() {
+    return getCategories().map((category) => ({
+        // The route carries the full chain, so a nested category keeps its
+        // parent's segment in the URL, exactly as Hexo generated it.
+        params: { category: category.path.replace(/^\/categories\//, "").replace(/\/$/, "") },
+        props: { category },
+    }));
+}
+
+const { category } = Astro.props;
+const page = getPage("categories");
+const categories = getCategories();
+const posts = sortByDateDesc(category.posts);
+
+const title = `Categories: ${category.name} | ${site.title}`;
+---
+
+<Base type="categories" title={title}>
+    <div id="archives">
+        <Chips entries={categories} kind="categories" activePath={category.path} />
+        <Timeline posts={posts} variant="static" />
+    </div>
+</Base>
