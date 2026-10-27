@@ -16,6 +16,12 @@ const html = contentOf(post);
             )
         }
 
+        {
+            post.subtitle && (
+                <div class="article-subtitle">{post.subtitle}</div>
+            )
+        }
+
         <div class="info">
             {
                 !isPage && post.date && (

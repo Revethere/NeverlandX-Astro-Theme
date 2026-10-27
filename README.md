@@ -130,6 +130,8 @@ export const site = {
 
 ~~其实是一个人的朋友圈 XD。~~
 
+图片多了有点性能问题，尽量在改了。
+
 `content/pages/moments.md` 每条动态以 `## DATE TIME` 开头，日期下面可以跟一行 `> LOCATION`：
 
 ```markdown

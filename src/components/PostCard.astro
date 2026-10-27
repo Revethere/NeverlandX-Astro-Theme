@@ -29,8 +29,13 @@ const excerpt = hasDescription
     data-has-more={String(hasMoreTag)}
     data-single={isSingle ? "true" : undefined}
 >
-    <a href={post.href}>
+    <a href={post.href} class="post-title-link">
         <h2 class="post-title">{post.title}</h2>
+        {
+            post.subtitle && (
+                <div class="post-subtitle">{post.subtitle}</div>
+            )
+        }
     </a>
 
     <div class="category-and-date">

@@ -6,13 +6,24 @@
  * whole page is a masthead and a hairline-separated list, and each entry prints
  * its time (plus an optional location) at the bottom the way WeChat does.
  *
+ * The stream is paginated: the newest `MOMENT_CHUNK_SIZE` entries are rendered
+ * here, and the rest are prerendered as partial pages under
+ * `/moments/feed/<n>/` that the browser fetches when the reader scrolls to the
+ * end. A long archive therefore never ships every photo in the first response.
+ *
  * The avatar question is answered twice over: one avatar in the masthead, and
  * `theme.moments.entryAvatar` (default off) if the per-entry face ever feels
  * right — a personal blog repeats the same face, so the default keeps it once.
  */
 import { site, theme } from "../site.config.js";
-import { getMomentIndex, getMoments, monthKey, monthLabel } from "../lib/moments.js";
-import MomentMedia from "./MomentMedia.astro";
+import {
+    MOMENT_CHUNK_SIZE,
+    getMomentIndex,
+    getMoments,
+    momentAnchors,
+    monthLabel,
+} from "../lib/moments.js";
+import MomentEntry from "./MomentEntry.astro";
 
 const { raw } = Astro.props;
 const entries = getMoments(raw);
@@ -20,21 +31,15 @@ const entries = getMoments(raw);
 const moments = theme.moments || {};
 const entryAvatar = moments.entryAvatar === true;
 
-// The stamp prints `18 Aug`, and only adds the year when it is not this year's.
-// Baked at build time; the little script below re-checks it against the reader's
-// clock so the label stays right across a New Year without a rebuild.
-const thisYear = String(new Date().getFullYear());
-
 // The calendar links to the newest entry of each month, so exactly one article
 // per month carries that month's anchor.
 const calendar = getMomentIndex(entries);
-const anchored = new Set();
-const anchors = entries.map((entry) => {
-    const key = monthKey(entry);
-    if (!key || anchored.has(key)) return undefined;
-    anchored.add(key);
-    return `m-${key}`;
-});
+const anchors = momentAnchors(entries);
+
+// The first batch is part of the page; the rest lives in the feed pages.
+const firstBatch = entries.slice(0, MOMENT_CHUNK_SIZE);
+const chunks = Math.ceil(entries.length / MOMENT_CHUNK_SIZE);
+const hasFeed = chunks > 1;
 ---
 
 <div id="moments">
@@ -82,57 +87,15 @@ const anchors = entries.map((entry) => {
                 </div>
             </header>
 
-        {
-            entries.map((entry, index) => (
-                <article class="moment" id={anchors[index]}>
-                    <div class="moment-body">
-                        {entryAvatar && (
-                            <img class="moment-avatar" src={theme.avatar} alt={site.author} />
-                        )}
-                        <div class="moment-content">
-                            {entry.blocks.map((block) =>
-                                block.type === "images" ? (
-                                    <div
-                                        class:list={["moment-images", { "is-single": block.single }]}
-                                        style={`--cols: ${block.columns}; --tile: ${
-                                            block.columns === 2 ? 200 : 176
-                                        }px`}
-                                    >
-                                        {block.images.map((image) => (
-                                            <img src={image.src} alt={image.alt} loading="lazy" />
-                                        ))}
-                                    </div>
-                                ) : block.type === "media" ? (
-                                    <MomentMedia media={block.media} />
-                                ) : (
-                                    <Fragment set:html={block.html} />
-                                ),
-                            )}
-                        </div>
-                    </div>
-                    <footer class="moment-meta">
-                        {entry.iso ? (
-                            <time datetime={entry.iso} data-year={entry.year}>
-                                {entry.day} {entry.month}
-                                <span class="moment-year" hidden={entry.year === thisYear}>
-                                    {" "}
-                                    {entry.year}
-                                </span>
-                                {entry.clock ? ` ${entry.clock}` : ""}
-                            </time>
-                        ) : (
-                            <span>{entry.label}</span>
-                        )}
-                        {entry.location && (
-                            <span class="moment-place">
-                                <i class="fa-solid fa-location-dot fa-fw" />
-                                {entry.location}
-                            </span>
-                        )}
-                    </footer>
-                </article>
-            ))
-        }
+            {firstBatch.map((entry, index) => (
+                <MomentEntry entry={entry} anchor={anchors[index]} />
+            ))}
+
+            {hasFeed && (
+                <div class="moments-feed" data-next="2" data-last={String(chunks)}>
+                    <span class="moments-feed-status" role="status" aria-live="polite" hidden />
+                </div>
+            )}
         </div>
     </div>
 </div>
@@ -143,11 +106,318 @@ const anchors = entries.map((entry) => {
     // Escape does nothing, so the list stays put while it is being used.
     const calendar = document.querySelector<HTMLElement>(".moments-calendar");
 
+    // The fixed menu covers the top of the page, so an anchor jump has to stop
+    // short of it by roughly the menu's height.
+    const MENU_CLEARANCE = 110;
+
+    // The stamp drops the year when it is this year's. The build bakes one "this
+    // year", so re-check against the reader's clock: a site that was last built in
+    // December still shows last year's entries without a year until January.
+    const liveYear = String(new Date().getFullYear());
+
+    const syncYears = (root: ParentNode) => {
+        root.querySelectorAll<HTMLElement>(".moment-meta time[data-year]").forEach((time) => {
+            const year = time.querySelector<HTMLElement>(".moment-year");
+            if (year) year.hidden = time.dataset.year === liveYear;
+        });
+    };
+
+    // The sentinel at the end of the stream. `data-next` is the feed page to
+    // fetch next, `data-last` the last one that exists; when both are equal the
+    // sentinel removes itself and the stream is complete.
+    const feed = document.querySelector<HTMLElement>(".moments-feed");
+    const status = feed?.querySelector<HTMLElement>(".moments-feed-status") ?? null;
+    const last = Number(feed?.dataset.last ?? "0");
+
+    let next = Number(feed?.dataset.next ?? "2");
+    let loading = false;
+    let observer: IntersectionObserver | null = null;
+
+    const showStatus = (text?: string) => {
+        if (!status) return;
+        status.textContent = text ?? "";
+        status.hidden = !text;
+    };
+
+    // Photos are what make a batch feel slow: the entries are a few kilobytes and
+    // the photos are several megabytes, so the batch is loaded photo-first and
+    // only then spliced in. A photo that never arrives (offline, a CDN hiccup)
+    // must not hold the stream hostage — errors count as done, the wait is capped,
+    // and a batch that is already two thirds loaded is close enough to show.
+    const PRELOAD_TIMEOUT = 8000;
+    const PRELOAD_MIN_WAIT = 2000;
+    const PRELOAD_READY_SHARE = 0.65;
+    // After the preload gives up, the entries are held back a little longer while
+    // their own photos finish: a batch that appears as empty frames is worse
+    // than a batch that is a couple of seconds late.
+    const IMAGE_SETTLE_TIMEOUT = 12000;
+
+    const preloadImages = (scope: ParentNode): Promise<void> =>
+        new Promise((resolve) => {
+            const images = [...scope.querySelectorAll("img")];
+            if (images.length === 0) {
+                resolve();
+                return;
+            }
+
+            const startedAt = performance.now();
+            const target = Math.max(1, Math.ceil(images.length * PRELOAD_READY_SHARE));
+            let pending = images.length;
+            let settled = false;
+            const finish = () => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve();
+            };
+            const timer = setTimeout(finish, PRELOAD_TIMEOUT);
+            const maybeEarly = () => {
+                const arrived = images.length - pending;
+                if (arrived < target) return;
+                if (performance.now() - startedAt < PRELOAD_MIN_WAIT) return;
+                finish();
+            };
+
+            images.forEach((image) => {
+                let finished = false;
+                const finishOne = () => {
+                    if (finished) return;
+                    finished = true;
+                    pending -= 1;
+                    if (pending === 0) {
+                        finish();
+                        return;
+                    }
+                    maybeEarly();
+                };
+                const probe = new Image();
+                probe.decoding = "async";
+                // Decoding too, not just downloading: a photo that still has to be
+                // turned into pixels is exactly the pop the preload exists to hide.
+                const settle = () => {
+                    if (probe.decode) probe.decode().then(finishOne, finishOne);
+                    else finishOne();
+                };
+                probe.onload = settle;
+                probe.onerror = finishOne;
+                probe.src = image.getAttribute("src") ?? "";
+                // A cached photo is finished before the handlers can fire.
+                if (probe.complete && probe.naturalWidth > 0) settle();
+            });
+        });
+
+    // The page is a photo page, so a photo that pops in after the entrance
+    // animation has played reads as a flash. Ask the stylesheet to keep photos
+    // hidden until their own bytes arrive; photos already in memory are handed to
+    // the page at once without a fade, and a browser without JS never hides them.
+    const root = document.getElementById("moments");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const fadeIn = (scope: ParentNode) => {
+        scope.querySelectorAll<HTMLImageElement>("img").forEach((image) => {
+            if (image.dataset.reveal === "done") return;
+            image.dataset.reveal = "done";
+            const show = () => image.classList.add("is-shown");
+            if (image.complete && image.naturalWidth > 0) {
+                image.style.transition = "none";
+                show();
+                void image.offsetWidth;
+                image.style.transition = "";
+                return;
+            }
+            image.addEventListener("load", show, { once: true });
+            image.addEventListener("error", show, { once: true });
+        });
+    };
+
+    // An entry joins the stream only after the photos it carries are on screen:
+    // it is inserted hidden (see .moment.is-entering) and rises into place, so a
+    // batch never lands as a row of empty frames while its photos stream in one
+    // by one — which is exactly the flash this page is trying to avoid.
+    const revealEntry = (entry: HTMLElement, index: number) => {
+        if (reducedMotion) return;
+        const delay = Math.min(index, 4) * 70;
+        entry.style.transitionDelay = `${delay}ms`;
+        requestAnimationFrame(() => entry.classList.add("is-entered"));
+        // The classes only shepherded the transition; once it is over the
+        // stylesheet has the entry back.
+        setTimeout(() => {
+            entry.classList.remove("is-entering", "is-entered");
+            entry.style.transitionDelay = "";
+        }, 700 + delay);
+    };
+
+    // A batch must not appear as empty frames. The entries are inserted hidden
+    // (see .moment.is-entering) and this wait releases them only once each photo
+    // they carry has its own fade started; a photo that never arrives is let go
+    // after the cap, and the fade it gets on arrival is still gentler than the
+    // whole batch sitting there as blanks.
+    const waitForImages = (entries: HTMLElement[], timeout: number): Promise<void> =>
+        new Promise((resolve) => {
+            const images = entries.flatMap((entry) => [
+                ...entry.querySelectorAll<HTMLImageElement>("img"),
+            ]);
+            const isReady = () => images.every((image) => image.classList.contains("is-shown"));
+            if (images.length === 0 || isReady()) {
+                resolve();
+                return;
+            }
+
+            let settled = false;
+            const finish = () => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                images.forEach((image) => {
+                    image.removeEventListener("load", check);
+                    image.removeEventListener("error", check);
+                });
+                resolve();
+            };
+            const check = () => {
+                if (isReady()) finish();
+            };
+            const timer = setTimeout(finish, timeout);
+            images.forEach((image) => {
+                image.addEventListener("load", check);
+                image.addEventListener("error", check);
+            });
+        });
+
+    if (root && !reducedMotion) {
+        root.classList.add("has-fade");
+        fadeIn(root);
+    }
+
+    // Parsing a batch and inserting it both cost main-thread time, so do them in
+    // a quiet moment. The timeout keeps a reader who never stops scrolling from
+    // waiting on the entries indefinitely.
+    const whenIdle = (work: () => void): Promise<void> =>
+        new Promise((resolve, reject) => {
+            const run = () => {
+                try {
+                    work();
+                    resolve();
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            if ("requestIdleCallback" in window) {
+                window.requestIdleCallback(run, { timeout: 400 });
+            } else {
+                setTimeout(run, 60);
+            }
+        });
+
+    const loadMore = async (): Promise<boolean> => {
+        if (!feed || loading || next > last) return false;
+
+        loading = true;
+        feed.classList.remove("is-failed");
+        feed.classList.add("is-loading");
+        showStatus("LOADING");
+
+        try {
+            const response = await fetch(`/moments/feed/${next}/`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            const html = await response.text();
+            const sentinel = feed;
+
+            // Load the batch's photos first, then splice the entries in — the
+            // status line is the only thing that moves while that happens.
+            const page = new DOMParser().parseFromString(html, "text/html");
+            const batch = [...page.querySelectorAll<HTMLElement>(".moment")];
+            if (batch.length === 0) throw new Error("the feed page had no entries");
+
+            showStatus("LOADING");
+            await preloadImages(page);
+
+            // Photos are already decoded, so keep the layout work out of the
+            // scroll: insert as one fragment, hidden until the reveal below.
+            await whenIdle(() => {
+                const fragment = document.createDocumentFragment();
+                for (const entry of batch) {
+                    if (!reducedMotion) entry.classList.add("is-entering");
+                    // Appended above the sentinel so the order stays newest → oldest.
+                    fragment.append(document.adoptNode(entry));
+                }
+                sentinel.before(fragment);
+            });
+
+            // Each entry is released as soon as its own photos are on screen, so
+            // the stream fills in newest-first instead of waiting for the slowest
+            // photo in the batch. The preload above usually makes this instant;
+            // the cap keeps a stalled photo from hiding an entry for good.
+            fadeIn(document);
+            await Promise.all(
+                batch.map((entry, index) =>
+                    waitForImages([entry], IMAGE_SETTLE_TIMEOUT).then(() =>
+                        revealEntry(entry, index),
+                    ),
+                ),
+            );
+
+            next += 1;
+            feed.dataset.next = String(next);
+            syncYears(document);
+
+            if (next > last) {
+                feed.remove();
+                observer?.disconnect();
+            }
+            showStatus();
+            return true;
+        } catch (error) {
+            console.error("[moments] could not load the next batch", error);
+            feed.classList.add("is-failed");
+            showStatus("LOAD FAILED, CLICK TO RETRY");
+            return false;
+        } finally {
+            loading = false;
+            feed.classList.remove("is-loading");
+        }
+    };
+
+    if (feed) {
+        // Fetch before the sentinel is actually on screen: a batch of photos
+        // takes a moment, and starting early keeps the arrival from reading as a
+        // cut. Watching starts only after the window's own load event, so the
+        // first screen's photos get the connection first instead of competing
+        // with the next batch for it. A short stream still loads as many batches
+        // as it takes to fill the viewport.
+        const startWatching = () => {
+            observer = new IntersectionObserver(
+                (records) => {
+                    if (records.some((record) => record.isIntersecting)) void loadMore();
+                },
+                { rootMargin: "900px 0px" },
+            );
+            observer.observe(feed);
+        };
+        if (document.readyState === "complete") startWatching();
+        else window.addEventListener("load", startWatching, { once: true });
+
+        // A failed batch can also be retried by clicking the status line.
+        feed.addEventListener("click", () => {
+            if (feed.classList.contains("is-failed")) void loadMore();
+        });
+    }
+
+    // The calendar can point at a month whose entry has not arrived yet. Pull
+    // batches until the anchor is in the DOM (or the stream ends), then jump.
+    const ensureAnchor = async (anchor: string): Promise<HTMLElement | null> => {
+        let target = document.getElementById(anchor);
+        while (!target && feed && next <= last) {
+            const loaded = await loadMore();
+            if (!loaded) break;
+            target = document.getElementById(anchor);
+        }
+        return target;
+    };
+
     if (calendar) {
         const toggle = calendar.querySelector<HTMLButtonElement>(".moments-calendar-toggle");
-        // The fixed menu covers the top of the page, so an anchor jump has to stop
-        // short of it by roughly the menu's height.
-        const MENU_CLEARANCE = 110;
 
         const setOpen = (open: boolean) => {
             calendar.classList.toggle("is-open", open);
@@ -160,24 +430,20 @@ const anchors = entries.map((entry) => {
 
         calendar.querySelectorAll<HTMLAnchorElement>(".moments-calendar-month").forEach((link) => {
             link.addEventListener("click", (event) => {
-                const anchor = link.dataset.anchor;
-                const target = anchor ? document.getElementById(anchor) : null;
-                if (!target) return;
                 event.preventDefault();
-                window.scrollTo({
-                    top: target.getBoundingClientRect().top + window.scrollY - MENU_CLEARANCE,
-                    behavior: "smooth",
-                });
+                const anchor = link.dataset.anchor;
+                if (!anchor) return;
+                void (async () => {
+                    const target = await ensureAnchor(anchor);
+                    if (!target) return;
+                    window.scrollTo({
+                        top: target.getBoundingClientRect().top + window.scrollY - MENU_CLEARANCE,
+                        behavior: "smooth",
+                    });
+                })();
             });
         });
     }
 
-    // The stamp drops the year when it is this year's. The build bakes one "this
-    // year", so re-check against the reader's clock: a site that was last built in
-    // December still shows last year's entries without a year until January.
-    const liveYear = String(new Date().getFullYear());
-    document.querySelectorAll<HTMLElement>(".moment-meta time[data-year]").forEach((time) => {
-        const year = time.querySelector<HTMLElement>(".moment-year");
-        if (year) year.hidden = time.dataset.year === liveYear;
-    });
+    syncYears(document);
 </script>

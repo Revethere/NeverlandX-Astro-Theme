@@ -14,7 +14,7 @@ const icon = media.kind === "music" ? "fa-music" : "fa-play";
 <a class="moment-media" href={media.href} target="_blank" rel="noopener">
     {
         media.cover ? (
-            <img class="moment-media-cover" src={media.cover} alt="" loading="lazy" referrerpolicy="no-referrer" />
+            <img class="moment-media-cover" src={media.cover} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
         ) : (
             <span class="moment-media-cover is-empty">
                 <i class={`fa-solid ${icon}`} aria-hidden="true" />

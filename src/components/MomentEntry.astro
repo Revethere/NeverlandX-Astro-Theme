@@ -1,0 +1,76 @@
+---
+/**
+ * One entry of the Moments stream.
+ *
+ * Extracted from the page so the stream can be split: the page renders the
+ * newest few entries itself and the rest arrive as prerendered partial pages
+ * (see `src/pages/moments/feed/[chunk].astro`), fetched as the reader scrolls.
+ * Both places render this component, so an entry looks the same whether it is
+ * in the first response or in the eleventh batch.
+ */
+import { site, theme } from "../site.config.js";
+import MomentMedia from "./MomentMedia.astro";
+
+const { entry, anchor } = Astro.props;
+
+const moments = theme.moments || {};
+const entryAvatar = moments.entryAvatar === true;
+
+// The stamp prints `18 Aug`, and only adds the year when it is not this year's.
+// Baked at build time; the page's small script re-checks it against the reader's
+// clock, including for the entries that arrive later.
+const thisYear = String(new Date().getFullYear());
+---
+
+<article class="moment" id={anchor}>
+    <div class="moment-body">
+        {entryAvatar && <img class="moment-avatar" src={theme.avatar} alt={site.author} />}
+        <div class="moment-content">
+            {
+                entry.blocks.map((block) =>
+                    block.type === "images" ? (
+                        <div
+                            class:list={["moment-images", { "is-single": block.single }]}
+                            style={`--cols: ${block.columns}; --tile: ${
+                                block.columns === 2 ? 200 : 176
+                            }px`}
+                        >
+                            {block.images.map((image) => (
+                                <img
+                                    src={image.src}
+                                    alt={image.alt}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            ))}
+                        </div>
+                    ) : block.type === "media" ? (
+                        <MomentMedia media={block.media} />
+                    ) : (
+                        <Fragment set:html={block.html} />
+                    ),
+                )
+            }
+        </div>
+    </div>
+    <footer class="moment-meta">
+        {entry.iso ? (
+            <time datetime={entry.iso} data-year={entry.year}>
+                {entry.day} {entry.month}
+                <span class="moment-year" hidden={entry.year === thisYear}>
+                    {" "}
+                    {entry.year}
+                </span>
+                {entry.clock ? ` ${entry.clock}` : ""}
+            </time>
+        ) : (
+            <span>{entry.label}</span>
+        )}
+        {entry.location && (
+            <span class="moment-place">
+                <i class="fa-solid fa-location-dot fa-fw" />
+                {entry.location}
+            </span>
+        )}
+    </footer>
+</article>

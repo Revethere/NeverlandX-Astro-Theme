@@ -1,0 +1,35 @@
+---
+/**
+ * A partial page of the Moments stream: one batch of entries, rendered without
+ * the page shell so the stream can fetch and splice it in as the reader scrolls
+ * (see the loader in `src/components/Moments.astro`).
+ *
+ * The page behind `/moments/` is batch one; this route produces batches two
+ * onwards at `/moments/feed/<n>/`. Fetching a partial document rather than a
+ * JSON payload keeps the markup in one place: an entry is always rendered by
+ * `MomentEntry.astro`, whichever response it arrives in.
+ */
+import MomentEntry from "../../../components/MomentEntry.astro";
+import { getPage } from "../../../lib/content.js";
+import { MOMENT_CHUNK_SIZE, getMoments, momentAnchors } from "../../../lib/moments.js";
+
+export function getStaticPaths() {
+    const entries = getMoments(getPage("moments").raw);
+    const chunks = Math.ceil(entries.length / MOMENT_CHUNK_SIZE);
+
+    // Batch one is the page itself, so there is nothing to prerender until a
+    // sixth entry exists.
+    return Array.from({ length: Math.max(0, chunks - 1) }, (_, offset) => ({
+        params: { chunk: String(offset + 2) },
+    }));
+}
+
+const chunk = Number(Astro.params.chunk ?? "0");
+const entries = getMoments(getPage("moments").raw);
+const anchors = momentAnchors(entries);
+
+const start = (chunk - 1) * MOMENT_CHUNK_SIZE;
+const batch = entries.slice(start, start + MOMENT_CHUNK_SIZE);
+---
+
+{batch.map((entry, offset) => <MomentEntry entry={entry} anchor={anchors[start + offset]} />)}

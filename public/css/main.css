@@ -277,16 +277,18 @@
     object-fit: cover;
     width: 100%;
 }
-/* One image is the only case WeChat does not crop. */
+/* One image is the only case WeChat does not crop. Sized between the tiled grid
+   and the old hero-like 62%: big enough to actually look at, small enough that a
+   lone photo still reads as one note among the others. */
 #moments .moment-images.is-single {
     display: block;
-    max-width: 62%;
+    max-width: 45%;
 }
 #moments .moment-images.is-single img {
     aspect-ratio: auto;
     border-radius: 10px;
     height: auto;
-    max-height: 420px;
+    max-height: 300px;
     max-width: 100%;
     object-fit: contain;
     width: auto;
@@ -310,6 +312,62 @@
 #moments .moment-place i {
     font-size: 11px;
     margin-right: 5px;
+}
+/* The sentinel at the end of the stream, where the next batch gets spliced in.
+   It is a 1px line — invisible at rest — and only grows into a status line while
+   a batch is loading or after one failed. */
+#moments .moments-feed {
+    height: 1px;
+    overflow: hidden;
+}
+#moments .moments-feed.is-loading,
+#moments .moments-feed.is-failed {
+    height: auto;
+    overflow: visible;
+    padding: 26px 0 6px;
+    text-align: center;
+}
+#moments .moments-feed-status {
+    color: #8a979b;
+    display: block;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+}
+#moments .moments-feed.is-failed .moments-feed-status {
+    cursor: pointer;
+    text-decoration: underline dotted;
+    text-underline-offset: 4px;
+}
+/* A photo that pops in after the page has arrived reads as a flash, so the page
+   script hides photos until their bytes are in and fades them in — `has-fade` is
+   only ever added by that script, so a browser without JS renders the plain
+   images. The `.is-entering` / `.is-entered` pair does the same for a batch of
+   older entries, which is inserted only once all of its photos are loaded. */
+#moments.has-fade img {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+#moments.has-fade img.is-shown {
+    opacity: 1;
+}
+#moments .moment.is-entering {
+    opacity: 0;
+    transform: translateY(10px);
+}
+#moments .moment.is-entered {
+    opacity: 1;
+    transform: none;
+    transition:
+        opacity 0.42s ease,
+        transform 0.42s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+    #moments.has-fade img,
+    #moments .moment.is-entering {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
 /* A shared link: cover, title, one line of counts. Kept small on purpose — it is
    a footnote to the note above it, not a player; the whole row links out. */
@@ -1160,6 +1218,25 @@
 #home-posts .post-title {
     color: #85bac0;
     text-align: center;
+}
+/* A post's optional `subtitle: …` on the home card — the same line the article
+   page shows under its h1, and deliberately spaced the same way: a tight 8px
+   to the title (it belongs to the title block) and 14px on to the meta row.
+   It lives inside the title link, so hovering or clicking the subtitle follows
+   the post like the title does. The ink is the title teal (#85bac0) a touch
+   deeper, so the line reads as an echo of the title rather than a new colour. */
+#home-posts .post .post-subtitle {
+    color: #8ebfc5;
+    font-size: 20px;
+    line-height: 1.5;
+    margin: -7px auto 0;
+    max-width: 34em;
+    text-align: center;
+}
+/* The subtitle now sits inside .post-title-link, so the meta row can no longer
+   be its adjacent sibling; key the gap off the link instead. */
+#home-posts .post .post-title-link + .category-and-date {
+    margin-top: 14px;
 }
 #home-posts .post:hover {
     box-shadow:
@@ -2031,6 +2108,20 @@ html.app-ready #loading-circle > .ring-orbit-alt > i:nth-child(2) {
 .article .info > :last-child,
 .article .info .tags > :last-child {
     margin-right: 0;
+}
+/* A post's optional `subtitle: …` — one line between the centered title and the
+   meta row. It belongs to the title block rather than to the body, so it sits
+   8px under the h1 and 14px above the date/category row — the same two gaps the
+   home card uses, so a post reads the same on both pages. Ink is halfway
+   between the h1 (#1e3e3f) and the meta grey (#5c6b72); size between 30px and
+   15px. */
+.article .article-subtitle {
+    color: #3d5559;
+    font-size: 20px;
+    line-height: 1.5;
+    margin: -7px auto 14px;
+    max-width: 34em;
+    text-align: center;
 }
 /* Article TOC sidebar: sticky glass column pinned to the right of the article.
    Built by js/lib/toc.js; hidden until the article has any headings. */
@@ -3205,7 +3296,7 @@ ol li {
         max-width: 100%;
     }
     #moments .moment-images.is-single {
-        max-width: 80%;
+        max-width: 55%;
     }
     #moments .moment-media {
         max-width: none;

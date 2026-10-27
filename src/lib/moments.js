@@ -266,3 +266,27 @@ export function getMomentIndex(entries) {
 
     return years;
 }
+
+/**
+ * How many entries the Moments page ships in one go. The rest are prerendered
+ * into partial pages (`/moments/feed/<n>/`) that the browser fetches as the
+ * reader scrolls, so a long stream no longer puts every photo in the first
+ * response.
+ */
+export const MOMENT_CHUNK_SIZE = 5;
+
+/**
+ * The id of the article the calendar jumps to for each month, or undefined when
+ * the entry is not its month's anchor. The month's newest entry takes the anchor,
+ * so one element per month exists and the ids match `getMomentIndex()`.
+ */
+export function momentAnchors(entries) {
+    const used = new Set();
+
+    return entries.map((entry) => {
+        const key = monthKey(entry);
+        if (!key || used.has(key)) return undefined;
+        used.add(key);
+        return `m-${key}`;
+    });
+}

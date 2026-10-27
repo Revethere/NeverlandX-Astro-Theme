@@ -137,6 +137,9 @@ function loadPosts() {
                 path: `/posts/${slug}/`,
                 href: hrefOf(`/posts/${slug}/`),
                 title: data.title === undefined ? "" : String(data.title),
+                // `subtitle` is the muted line under the title on the article
+                // page — a note on what the post is about, not a second title.
+                subtitle: data.subtitle === undefined ? undefined : String(data.subtitle),
                 date: parseDate(data.date),
                 updated: data.updated ? parseDate(data.updated) : null,
                 // `raw` is the Markdown body; `source` is the whole file,
