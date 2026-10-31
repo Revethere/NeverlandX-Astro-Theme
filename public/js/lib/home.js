@@ -14,6 +14,11 @@ const collapseMs = (px) => Math.min(600, Math.round(280 + px * 0.05));
 // the browser — a colour baked into the HTML would be wrong for eight of the
 // nine wallpapers and would turn every build into a fresh diff.
 const TINT_SAMPLE_FROM = 0.7; // average only the bottom 30% of the wallpaper
+// Where the hero title sits, as fractions of the picture: [unused, top, width].
+// Lower-left, roughly what #home-info occupies; sampled to pick the ink colour.
+const HERO_INK_SAMPLE = [0, 0.62, 0.6];
+// Above this average lightness the corner counts as light and the type goes dark.
+const HERO_INK_CUTOFF = 0.58;
 const TINT_SAT_BOOST = 3; // wallpapers average out near-grey; lift the hue
 const TINT_SAT_MAX = 0.4;
 // The page is meant to read as a page, so it stays near-white. The chrome that
@@ -271,6 +276,45 @@ mixins.home = {
                     );
                     document.body.style.setProperty("--page-bg", tint.page);
                     document.body.style.setProperty("--tint-deep", tint.deep);
+                    // Ink for the hero type. The title sits in the lower-left
+                    // corner, so the question is how light *that* patch of the
+                    // picture is, not the picture as a whole: a wall of white on
+                    // the right says nothing about the words on the left. Sampled
+                    // at the same 32x32 grid so it costs one more getImageData.
+                    ctx.clearRect(0, 0, size, size);
+                    ctx.drawImage(
+                        picture,
+                        0,
+                        picture.height * HERO_INK_SAMPLE[1],
+                        picture.width * HERO_INK_SAMPLE[2],
+                        picture.height * (1 - HERO_INK_SAMPLE[1]),
+                        0,
+                        0,
+                        size,
+                        size
+                    );
+                    const corner = ctx.getImageData(0, 0, size, size).data;
+                    let luma = 0;
+                    for (let i = 0; i < corner.length; i += 4) {
+                        // Rec. 709 weights over gamma-encoded values: good enough
+                        // to pick a side, which is all this decides.
+                        luma +=
+                            0.2126 * corner[i] +
+                            0.7152 * corner[i + 1] +
+                            0.0722 * corner[i + 2];
+                    }
+                    const lightness = luma / (corner.length / 4) / 255;
+                    const inkLight = lightness < HERO_INK_CUTOFF;
+                    document.body.style.setProperty(
+                        "--hero-ink",
+                        inkLight ? "#f7fafb" : "#1e3e3f"
+                    );
+                    document.body.style.setProperty(
+                        "--hero-halo",
+                        inkLight
+                            ? "rgba(10, 26, 28, 0.55)"
+                            : "rgba(255, 255, 255, 0.7)"
+                    );
                     // The rings again, off the whole picture this time.
                     ctx.clearRect(0, 0, size, size);
                     ctx.drawImage(picture, 0, 0, picture.width, picture.height, 0, 0, size, size);
