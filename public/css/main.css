@@ -2563,13 +2563,13 @@ body::-webkit-scrollbar-track {
 #loading.fade-leave-active::before {
     height: 150vmax;
     transition:
-        height 0.5s cubic-bezier(0.25, 0.6, 0.3, 1),
-        width 0.5s cubic-bezier(0.25, 0.6, 0.3, 1);
+        height 0.85s cubic-bezier(0.25, 0.6, 0.3, 1),
+        width 0.85s cubic-bezier(0.25, 0.6, 0.3, 1);
     width: 150vmax;
 }
 #loading.fade-leave-active > #loading-circle {
     opacity: 0;
-    transition: opacity 0.18s ease;
+    transition: opacity 0.3s ease;
 }
 @media (prefers-reduced-motion: reduce) {
     #loading.fade-leave-active::before {

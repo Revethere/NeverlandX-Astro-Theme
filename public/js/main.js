@@ -31,7 +31,7 @@ const MENU_CLOUD_AT = 0.25;
 const FADE_MS = 300;
 // The loader opens from its centre (see #loading in main.css), which takes longer
 // than a plain fade — the screen has to clear before the node is hidden.
-const LOADING_MS = 540;
+const LOADING_MS = 900;
 const SLIDE_MS = 300;
 
 /* ------------------------------------------------------------ transitions -- */
