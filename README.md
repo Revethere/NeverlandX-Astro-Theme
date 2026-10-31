@@ -148,28 +148,22 @@ export const site = {
 
 ```markdown
 [Bilibili](Bilibili:BV号)
-[YouTube](YouTube:Video ID)
+[YouTube](YouTube:VideoID)
 [QQ 音乐](https://music.163.com/#/song?id=xxx)
 [网易云音乐](https://y.qq.com/n/ryqq/songDetail/xxx)
-[Spotify](https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC)
+[Spotify](https://open.spotify.com/track/xxx)
 ```
 
-不建议使用酷狗~~因为没接口）~~。
-
-元数据**不缓存**：每次打开页面，卡片自己取一次，所以新贴的链接不用跑任何命令。
-
-浏览器能直接取的只有 YouTube 和 Spotify（它们的 oEmbed 允许跨域）；B 站的接口带
-`Origin` 会返回 403，网易云 / QQ 音乐没有 CORS 头也不支持 JSONP，酷狗没有公开接口。
-这三家要显示封面和播放量，就得搭一个小代理——仓库里的 `worker/` 是一个 Cloudflare
-Worker（免费额度足够，约 200 行）：
+由于浏览器能直接抓取的只有 YouTube 和 Spotify；B 站的接口带 `Origin` 会返回 403，网易云 / QQ 音乐没有 CORS 头也不支持 JSONP，酷狗没有公开接口。
+`worker/` 是一个 Cloudflare Worker 代理，用于抓取元数据：
 
 ```bash
 cd worker
 npx wrangler login
-npx wrangler deploy      # 会打印一个 https://<name>.<子域>.workers.dev
+npx wrangler deploy      # https://<name>.<子域>.workers.dev
 ```
 
-把打印出来的地址填进配置即可：
+把打印出来的地址填进配置：
 
 ```js
 // src/site.config.js
@@ -178,18 +172,7 @@ moments: {
 },
 ```
 
-详细说明见 `worker/README.md`。`mediaProxy` 留空也能用：YouTube / Spotify 正常显示，
-其它平台保持「标题 + 服务名 + 占位图标」的降级样子；代理挂掉时也走同样的降级，卡片
-始终是一个能点的链接。Worker 侧按「平台 + 编号」在边缘缓存 1 小时，刷新不会把上游打爆。
-### B 站的例外
-
-B 站连 Worker 都不放行：所有 `*.bilibili.com` 对数据中心的 IP 一律返回 `412`（API、网页、
-移动页、换 UA / Cookie 都一样）。所以 B 站卡片的数据由构建脚本抓：`npm run build` 会先跑
-`scripts/refresh-bilibili.mjs`（`prebuild`），扫描正文和朋友圈里的 `Bilibili:BV…` 链接，
-把标题、封面、播放量、点赞、弹幕写进 `src/lib/bilibili-snapshot.json`；24 小时内不重复抓，
-抓不到就沿用旧值。想立刻刷新跑 `npm run bilibili -- --force`。
-
-结果是：B 站的数字跟着**部署**更新，YouTube / Spotify / 网易云 / QQ 音乐跟着**刷新页面**更新。
+由于 B 站 ban 了数据中心的 IP，因此卡片信息在每次构建时抓取并写入 `src/lib/bilibili-snapshot.json`。
 
 ## 许可
 
