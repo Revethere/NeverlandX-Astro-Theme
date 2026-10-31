@@ -17,7 +17,7 @@ const TINT_SAMPLE_FROM = 0.7; // average only the bottom 30% of the wallpaper
 // Where the hero title sits, as fractions of the picture: [unused, top, width].
 // Lower-left, roughly what #home-info occupies; sampled to pick the ink colour.
 // The type sits a little higher than it used to, so the sample starts higher too.
-const HERO_INK_SAMPLE = [0, 0.58, 0.6];
+const HERO_INK_SAMPLE = [0, 0.68, 0.45];
 // Above this average lightness the corner counts as light and the type goes dark,
 // but not as dark as the page's own ink: on a bright photo pure ink reads as a
 // sticker, so the light-corner ink is that ink mixed part of the way to white.
