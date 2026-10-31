@@ -4,14 +4,26 @@
  * small metadata line on the right. Deliberately small — it is a footnote to the
  * note above it, not a player: everything links out to the source.
  *
- * A cover is drawn only when the cache (or YouTube's id-only image URL) has one;
- * otherwise the same square becomes a quiet icon tile so the row keeps its shape.
+ * The build only knows what the markdown says, so the `data-*` attributes carry
+ * what the client script in `public/js/lib/media-cards.js` needs to fetch the
+ * rest: which service, which id, whether the title on screen is a placeholder,
+ * and whether the card is a video or a track (that decides the stats line).
  */
 const { media } = Astro.props;
 const icon = media.kind === "music" ? "fa-music" : "fa-play";
 ---
 
-<a class="moment-media" href={media.href} target="_blank" rel="noopener">
+<a
+    class="moment-media"
+    href={media.href}
+    target="_blank"
+    rel="noopener"
+    data-provider={media.provider}
+    data-id={media.id}
+    data-kind={media.kind}
+    data-title-source={media.titleIsFallback ? "fallback" : "author"}
+    data-static={media.static ? "true" : undefined}
+>
     {
         media.cover ? (
             <img class="moment-media-cover" src={media.cover} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />

@@ -1,14 +1,15 @@
 /**
  * Which URLs count as shareable media, and how to read an id out of each one.
  *
- * Kept free of any file-system or cache access so the build (`media.js`) and the
- * authoring script (`scripts/fetch-media.mjs`) can share exactly one parser —
- * two copies would drift the moment a provider changes its URL shape.
+ * Kept free of any file-system or network access so three callers share one
+ * parser: the build (`media.js`), the Cloudflare Worker in `worker/` and the unit
+ * checks in `scripts/test-media.mjs` — copies would drift the moment a provider
+ * changes its URL shape.
  */
 
 /**
- * Every provider we recognise. `parse(url)` returns the id used as the cache
- * key, or null when the URL is not this provider's shape.
+ * Every provider we recognise. `parse(url)` returns the id the worker is asked
+ * for, or null when the URL is not this provider's shape.
  */
 export const PROVIDERS = {
     bilibili: {

@@ -45,6 +45,10 @@ export const theme = {
     moments: {
         note: "",
         entryAvatar: false,
+        // Cloudflare Worker from worker/ that fetches metadata the browser cannot read
+        // itself (Bilibili / NetEase / QQ Music). Leave empty and only YouTube / Spotify
+        // cards get a title and a cover.
+        mediaProxy: "",
     },
 
     card: {

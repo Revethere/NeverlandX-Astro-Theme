@@ -373,7 +373,9 @@
    a footnote to the note above it, not a player; the whole row links out. */
 #moments .moment-media {
     align-items: center;
-    border: 1px solid #ececec;
+    /* Original flat card, but the edge is the theme's lavender instead of a grey
+       that disappeared into the page tint. */
+    border: 1px solid #d5c0ea;
     border-radius: 12px;
     color: inherit;
     display: flex;
@@ -385,8 +387,8 @@
     transition: border-color 0.25s, box-shadow 0.25s;
 }
 #moments .moment-media:hover {
-    border-color: #e2d7ea;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04), 0 10px 26px rgba(146, 116, 176, 0.12);
+    border-color: #bfa2dd;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05), 0 10px 26px rgba(146, 116, 176, 0.16);
 }
 #moments .moment-media-cover {
     border-radius: 8px;

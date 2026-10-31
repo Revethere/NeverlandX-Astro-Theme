@@ -108,6 +108,17 @@ const tagColorConfig = JSON.stringify({
 
         {type === "index" && <script is:inline src="/js/lib/home.js" />}
         {type === "post" && <script is:inline src="/js/lib/toc.js" />}
+        {
+            type === "moments" && (
+                <>
+                    <script
+                        is:inline
+                        set:html={`window.__MEDIA_PROXY__ = ${JSON.stringify(theme.moments.mediaProxy || "")};`}
+                    />
+                    <script is:inline src="/js/lib/media-cards.js" />
+                </>
+            )
+        }
 
         <script is:inline src="/js/lib/reveal.js" />
 
