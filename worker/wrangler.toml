@@ -1,0 +1,7 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "neverlandx-media"
+main = "media-proxy.js"
+compatibility_date = "2025-01-01"
+
+# 用自己的域名时取消注释（域名要和 Worker 在同一个 Cloudflare 账号下）：
+# routes = [{ pattern = "media.example.com", custom_domain = true }]
