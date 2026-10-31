@@ -3417,3 +3417,126 @@ ol li {
 .page-current a > .light-ring {
     padding: 1px;
 }
+
+/* The hero.
+   It used to be a 500px disc dead centre — four turning blobs and a wash, with
+   the title inside it. The wallpapers here are mostly portraits, and a portrait
+   puts its subject in the middle, so the disc and the type landed on the face:
+   the thing the page is showing got covered by the thing it is saying.
+   The type now sits in the lower-left corner on a scrim that clears the picture
+   above it, and the blobs are tucked into that same corner, behind the words, as
+   an accent instead of the frame. The face is never under anything. */
+#home-head {
+    /* The scrim is the hero's own background: the wallpaper is a child at
+       z-index -1, so this paints over it. Transparent for the top two thirds —
+       that is the picture — then it ramps up under the type so the words have
+       something to sit on without dimming the portrait. */
+    background: linear-gradient(
+        to bottom,
+        transparent 58%,
+        rgba(246, 248, 250, 0.35) 84%,
+        rgba(246, 248, 250, 0.8) 100%
+    );
+}
+#home-head #home-info {
+    /* Pinned to the corner: margin-top auto in a flex hero, so it rides the
+       bottom whatever the viewport height does. */
+    align-items: flex-end;
+    display: flex;
+    height: auto;
+    margin: auto 0 0 0;
+    padding: 0 0 10vh 7vw;
+    position: relative;
+    width: auto;
+}
+#home-head #home-info .info {
+    /* Was a 500px circle with a wash. The disc is what covered the wallpaper, so
+       there is no disc: the type sits straight on the scrim. */
+    background: none;
+    border-radius: 0;
+    display: block;
+    height: auto;
+    position: relative;
+    text-align: left;
+    width: auto;
+    z-index: 1;
+}
+#home-head #home-info .info .wrap {
+    padding: 0;
+}
+#home-head #home-info .info .wrap h1 {
+    font-size: 64px;
+    margin-bottom: 4px;
+    white-space: normal;
+}
+#home-head #home-info .info .wrap h3 {
+    font-size: 22px;
+    margin: 6px 0;
+}
+#home-head #home-info .info .wrap h5 {
+    font-size: 15px;
+    margin: 10px 0 0;
+}
+/* Type on a picture needs something to hold its edge; the same shadow the disc
+   used, without the disc. */
+#home-head #home-info .info .wrap h1,
+#home-head #home-info .info .wrap h3,
+#home-head #home-info .info .wrap h5 {
+    text-shadow:
+        0 1px 2px rgba(12, 40, 42, 0.3),
+        0 0 26px rgba(255, 255, 255, 0.6);
+}
+/* The blobs, demoted to a corner accent: still turning, still tinted from the
+   wallpaper, but half out of frame and behind the type. */
+#home-head #home-info .loop {
+    bottom: -170px;
+    display: inline-block;
+    height: 480px;
+    left: -120px;
+    opacity: 0.85;
+    position: absolute;
+    width: 480px;
+    z-index: 0;
+}
+/* Below the desktop breakpoint the disc used to become a white circle, which is
+   the same problem at phone size: a portrait fills the screen and the circle sat
+   on the face. Same corner, smaller, no blobs. */
+@media (max-width: 900px) {
+    #home-head {
+        background: linear-gradient(
+            to bottom,
+            transparent 50%,
+            rgba(246, 248, 250, 0.45) 80%,
+            rgba(246, 248, 250, 0.9) 100%
+        );
+    }
+    #home-head #home-info {
+        height: auto;
+        padding: 0 0 9vh 6vw;
+        width: auto;
+    }
+    #home-head #home-info .info {
+        background: none;
+        border-radius: 0;
+        display: block;
+        height: auto;
+        text-align: left;
+        width: auto;
+    }
+    #home-head #home-info .info .wrap {
+        padding: 0;
+    }
+    #home-head #home-info .info .wrap h1 {
+        font-size: 40px;
+    }
+    #home-head #home-info .info .wrap h3 {
+        font-size: 18px;
+    }
+    #home-head #home-info .info .wrap h5 {
+        font-size: 14px;
+        margin: 8px 0 0;
+    }
+    #home-head #home-info .loop {
+        display: none;
+    }
+}
