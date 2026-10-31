@@ -3434,7 +3434,7 @@ ol li {
     display: flex;
     height: auto;
     margin: auto 0 0 0;
-    padding: 0 0 10vh 7vw;
+    padding: 0 0 14vh 9vw;
     position: relative;
     width: auto;
 }
@@ -3461,10 +3461,12 @@ ol li {
 #home-head #home-info .info .wrap h3 {
     font-size: 22px;
     margin: 6px 0;
+    margin-left: 4px;
 }
 #home-head #home-info .info .wrap h5 {
     font-size: 15px;
     margin: 10px 0 0;
+    margin-left: 4px;
 }
 /* Both variables come from the sample in home.js; the fallbacks are what plain
    dark type on a light corner looked like before any wallpaper was measured. */
@@ -3475,7 +3477,7 @@ ol li {
     /* A halo in the opposite direction to the ink: it separates the glyph edge
        from whatever the picture happens to be doing right there, and at this
        offset it reads as a sharpening of the letter rather than a glow. */
-    text-shadow: 0 1px 3px var(--hero-halo, rgba(255, 255, 255, 0.65));
+    text-shadow: 0 1px 4px var(--hero-halo, rgba(255, 255, 255, 0.65));
 }
 /* The blobs are gone from the hero: over a portrait they are another thing
    laid on top of the subject, and there is no version of them that does not
@@ -3487,7 +3489,7 @@ ol li {
 @media (max-width: 900px) {
     #home-head #home-info {
         height: auto;
-        padding: 0 0 9vh 6vw;
+        padding: 0 0 12vh 8vw;
         width: auto;
     }
     #home-head #home-info .info {
@@ -3506,9 +3508,11 @@ ol li {
     }
     #home-head #home-info .info .wrap h3 {
         font-size: 18px;
+        margin-left: 3px;
     }
     #home-head #home-info .info .wrap h5 {
         font-size: 14px;
         margin: 8px 0 0;
+        margin-left: 3px;
     }
 }

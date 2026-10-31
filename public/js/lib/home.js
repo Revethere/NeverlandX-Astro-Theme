@@ -16,9 +16,18 @@ const collapseMs = (px) => Math.min(600, Math.round(280 + px * 0.05));
 const TINT_SAMPLE_FROM = 0.7; // average only the bottom 30% of the wallpaper
 // Where the hero title sits, as fractions of the picture: [unused, top, width].
 // Lower-left, roughly what #home-info occupies; sampled to pick the ink colour.
-const HERO_INK_SAMPLE = [0, 0.62, 0.6];
-// Above this average lightness the corner counts as light and the type goes dark.
+// The type sits a little higher than it used to, so the sample starts higher too.
+const HERO_INK_SAMPLE = [0, 0.58, 0.6];
+// Above this average lightness the corner counts as light and the type goes dark,
+// but not as dark as the page's own ink: on a bright photo pure ink reads as a
+// sticker, so the light-corner ink is that ink mixed part of the way to white.
 const HERO_INK_CUTOFF = 0.58;
+const HERO_INK_DEEP = [30, 62, 63]; // #1e3e3f, the ink the rest of the page uses
+const HERO_INK_LIGHT_MIX = 0.34; // how far it leans to white on a bright corner
+const mixInk = ([r, g, b], t) => {
+  const channel = (value) => Math.round(value + (255 - value) * t);
+  return `rgb(${channel(r)}, ${channel(g)}, ${channel(b)})`;
+};
 const TINT_SAT_BOOST = 3; // wallpapers average out near-grey; lift the hue
 const TINT_SAT_MAX = 0.4;
 // The page is meant to read as a page, so it stays near-white. The chrome that
@@ -307,13 +316,15 @@ mixins.home = {
                     const inkLight = lightness < HERO_INK_CUTOFF;
                     document.body.style.setProperty(
                         "--hero-ink",
-                        inkLight ? "#f7fafb" : "#1e3e3f"
+                        inkLight
+                            ? "#f7fafb"
+                            : mixInk(HERO_INK_DEEP, HERO_INK_LIGHT_MIX)
                     );
                     document.body.style.setProperty(
                         "--hero-halo",
                         inkLight
                             ? "rgba(10, 26, 28, 0.55)"
-                            : "rgba(255, 255, 255, 0.7)"
+                            : "rgba(255, 255, 255, 0.85)"
                     );
                     // The rings again, off the whole picture this time.
                     ctx.clearRect(0, 0, size, size);
