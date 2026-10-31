@@ -3322,3 +3322,39 @@ ol li {
         padding-left: 20px;
     }
 }
+
+/* The rim a card catches while the pointer is over it. The card itself is
+   opaque, so a highlight cannot pass through it — but its edge is exactly where
+   light from outside would land. This paints a one-pixel ring over the card's
+   own border, brightest under the cursor and fading around the perimeter, and
+   gives that ring a drop-shadow so the bloom collects on the lit stretch
+   instead of glowing evenly. A masked ring is used rather than a border colour
+   because the gradient has to travel along the edge as the pointer moves. */
+.light-rim {
+    background: radial-gradient(
+        260px circle at var(--sx, 50%) var(--sy, 50%),
+        rgba(214, 186, 246, 0.95),
+        rgba(178, 140, 224, 0.42) 48%,
+        rgba(178, 140, 224, 0) 78%
+    );
+    border-radius: inherit;
+    filter: drop-shadow(0 0 6px rgba(178, 140, 224, 0.42));
+    inset: 0;
+    opacity: 0;
+    padding: 2px;
+    pointer-events: none;
+    position: absolute;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    mask-composite: exclude;
+}
+.light-hit > .light-rim {
+    opacity: 1;
+}
