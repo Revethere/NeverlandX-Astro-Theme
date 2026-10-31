@@ -48,7 +48,7 @@ export const theme = {
     //   "rail"   the title turns into a spine down the left edge, like a cover
     //   "corner" type in the lower-left corner, straight on the picture
     hero: {
-        style: "band",
+        style: "rail",
     },
     moments: {
         note: "",
