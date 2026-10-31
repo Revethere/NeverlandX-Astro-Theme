@@ -26,8 +26,11 @@
     /* Surfaces that take the light. Kept as a selector rather than an attribute
        so a surface added later inherits the behaviour without touching its
        markup. Cards first, then the controls that are the same material: the
-       search pill, its filter chips and toggle, the filter panel, the table of
-       contents, pagination, and the two expand controls on a post card. */
+       search pill, its filter chips and toggle, the table of contents,
+       pagination, and the two expand controls on a post card. The filter panel
+       itself is left out on purpose — it is a wide sheet rather than a card, and
+       a lit border around a whole sheet of options pulls the eye away from the
+       options. */
     var SURFACES = [
         ".post",
         ".article",
@@ -36,7 +39,6 @@
         ".moment-media",
         "#card-style",
         ".archive-search",
-        ".archive-panel",
         ".archive-option",
         ".filter-toggle",
         ".article-side",
