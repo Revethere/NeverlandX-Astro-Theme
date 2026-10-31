@@ -29,6 +29,9 @@ const MENU_CLOUD_AT = 0.25;
 
 // The two transparent-widget transitions from main.css.
 const FADE_MS = 300;
+// The loader opens from its centre (see #loading in main.css), which takes longer
+// than a plain fade — the screen has to clear before the node is hidden.
+const LOADING_MS = 540;
 const SLIDE_MS = 300;
 
 /* ------------------------------------------------------------ transitions -- */
@@ -127,7 +130,7 @@ const EFFECTS = {
         // the loading screen's own departure (see .into-enter-active in main.css).
         if (main) main.className = "into-enter-active";
         if (menu) menu.classList.add("menu-enter");
-        leave(loader, "fade", FADE_MS);
+        leave(loader, "fade", LOADING_MS);
     },
 
     menuColor() {

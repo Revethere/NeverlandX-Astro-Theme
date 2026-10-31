@@ -1261,9 +1261,30 @@
 #footer #footer-wrap {
     box-sizing: border-box;
 }
+/* The sheet that hides the page while it loads. It is a zero-sized circle
+   centred in the viewport with a 100vmax shadow, so its footprint is the whole
+   screen — and growing the circle opens a hole in the middle, which is what lets
+   the loader leave as a widening window rather than a fade. */
+#loading::before {
+    border-radius: 50%;
+    box-shadow: 0 0 0 100vmax #fff;
+    /* A hard circle would read as a wipe; this gives the window a soft rim so
+       the edge looks like light rather than a mask. */
+    filter: blur(18px);
+    content: "";
+    height: 0;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+}
 #loading {
     align-items: center;
-    background: #fff;
+    /* The white sheet is #loading::before below: a zero-sized circle whose
+       shadow covers the viewport, so the loader can be opened from its centre on
+       the way out instead of only fading. */
+    background: none;
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -2530,6 +2551,30 @@ body::-webkit-scrollbar-track {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+/* The loader leaves from its middle: the hole opens outward while the ring and
+   the word fade out of the way, so the page arrives as a window widening rather
+   than as a flat fade. The sheet itself must stay solid while it opens, so its
+   own opacity is pinned here against .fade-leave-to above. */
+#loading.fade-leave-active {
+    opacity: 1;
+    transition: none;
+}
+#loading.fade-leave-active::before {
+    height: 150vmax;
+    transition:
+        height 0.5s cubic-bezier(0.25, 0.6, 0.3, 1),
+        width 0.5s cubic-bezier(0.25, 0.6, 0.3, 1);
+    width: 150vmax;
+}
+#loading.fade-leave-active > #loading-circle {
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+    #loading.fade-leave-active::before {
+        transition: none;
+    }
 }
 .hljs-ln-code {
     padding-left: 20px !important;
