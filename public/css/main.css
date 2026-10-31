@@ -3516,3 +3516,91 @@ ol li {
         margin-left: 3px;
     }
 }
+
+/* Two other ways for the hero type to meet the wallpaper. Both are CSS on the
+   existing markup: the picture, its dissolve and the type are already separate
+   layers, so the same hero can present itself three ways without a rebuild.
+   The choice is theme.hero.style, published as data-hero on <html>. */
+
+/* "band" — the picture stops short, so the dissolve finishes above the words and
+   the type lands on the paper band underneath it. Nothing is written on the
+   photograph at all; the picture reads as a plate with a caption below. */
+html[data-hero="band"] #home-head {
+    --hero-fade-band: 22vh;
+    --hero-settle-band: 12vh;
+}
+html[data-hero="band"] #home-head #home-background {
+    height: 84vh;
+    top: 0;
+}
+html[data-hero="band"] #home-head #home-info {
+    padding: 0 0 6vh 9vw;
+}
+html[data-hero="band"] #home-head #home-info .info .wrap h1 {
+    font-size: 58px;
+}
+
+/* "rail" — the title turns into a spine down the left edge with a hairline
+   beside it, like the cover of a magazine. The middle of the picture is
+   untouched, which is the whole point of moving the type out of it. */
+@media (min-width: 901px) {
+    html[data-hero="rail"] #home-head #home-info {
+        align-items: stretch;
+        display: block;
+        inset: 0;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+    }
+    html[data-hero="rail"] #home-head #home-info .info {
+        align-items: center;
+        bottom: 0;
+        display: flex;
+        left: 40px;
+        position: absolute;
+        top: 0;
+    }
+    html[data-hero="rail"] #home-head #home-info .info .wrap {
+        text-align: center;
+    }
+    html[data-hero="rail"] #home-head #home-info .info .wrap h1 {
+        font-size: 30px;
+        letter-spacing: 0.4em;
+        line-height: 1;
+        margin: 0;
+        transform: rotate(180deg);
+        writing-mode: vertical-rl;
+    }
+    html[data-hero="rail"] #home-head #home-info .info .wrap h3,
+    html[data-hero="rail"] #home-head #home-info .info .wrap h5 {
+        display: none;
+    }
+    html[data-hero="rail"] #home-head #home-info::after {
+        background: currentColor;
+        bottom: 120px;
+        content: "";
+        left: 112px;
+        opacity: 0.3;
+        position: absolute;
+        top: 120px;
+        width: 1px;
+    }
+}
+
+/* Phones get the band too, with a shorter plate; the rail is a wide-screen idea
+   and would eat a third of a phone screen, so phones keep the corner. */
+@media (max-width: 900px) {
+    html[data-hero="band"] #home-head {
+        --hero-fade-band: 16vh;
+        --hero-settle-band: 10vh;
+    }
+    html[data-hero="band"] #home-head #home-background {
+        height: 72vh;
+    }
+    html[data-hero="band"] #home-head #home-info {
+        padding: 0 0 4vh 8vw;
+    }
+    html[data-hero="band"] #home-head #home-info .info .wrap h1 {
+        font-size: 38px;
+    }
+}

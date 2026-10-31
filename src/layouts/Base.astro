@@ -13,6 +13,10 @@ import Footer from "../components/Footer.astro";
 
 const { type = "post", title = site.title } = Astro.props;
 
+// Which way the hero presents the picture: "band" (type on the paper band under
+// the picture), "rail" (title as a spine down the left edge) or "corner".
+const heroStyle = theme.hero?.style || "corner";
+
 // The client-side tag colour picker reads this. `<` is escaped so the JSON can
 // never close the script tag early.
 const tagColorConfig = JSON.stringify({
@@ -24,7 +28,7 @@ const tagColorConfig = JSON.stringify({
 ---
 
 <!doctype html>
-<html lang={site.language}>
+<html lang={site.language} data-hero={heroStyle}>
     <head>
         <meta charset="utf-8" />
         <title>{title}</title>

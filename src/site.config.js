@@ -42,6 +42,14 @@ export const theme = {
         },
     },
 
+    // How the big type meets the wallpaper:
+    //   "band"   the picture is shortened so the dissolve finishes above the
+    //            words, and the type sits on the paper band underneath it
+    //   "rail"   the title turns into a spine down the left edge, like a cover
+    //   "corner" type in the lower-left corner, straight on the picture
+    hero: {
+        style: "band",
+    },
     moments: {
         note: "",
         entryAvatar: false,

@@ -94,6 +94,7 @@ export const site = {
 | `colors` / `tagColors`                      | 分类、标签胶囊的调色板与取色方式                         |
 | `menu`                                      | 主菜单，键的顺序即渲染顺序；带 `children` 的会变成下拉组 |
 | `moments`                                   | 朋友圈页头的小字                                         |
+| `hero`                                      | 首页大标题的排布：`band` 文字落在壁纸下方的纸带上（默认）、`rail` 标题竖排贴左边缘、`corner` 左下角 |
 | `card`                                      | 首页右侧个人信息卡片                                     |
 | `footer`                                    | 版权起始年份、备案号                                     |
 | `highlight` / `math` / `preview` / `search` | 各功能的开关                                             |

@@ -24,6 +24,9 @@ const HERO_INK_SAMPLE = [0, 0.58, 0.6];
 const HERO_INK_CUTOFF = 0.58;
 const HERO_INK_DEEP = [30, 62, 63]; // #1e3e3f, the ink the rest of the page uses
 const HERO_INK_LIGHT_MIX = 0.34; // how far it leans to white on a bright corner
+// "band" puts the type on the paper under the picture rather than on the
+// picture, so there is nothing to sample: paper is paper.
+const HERO_BAND = document.documentElement.dataset.hero === "band";
 const mixInk = ([r, g, b], t) => {
   const channel = (value) => Math.round(value + (255 - value) * t);
   return `rgb(${channel(r)}, ${channel(g)}, ${channel(b)})`;
@@ -313,7 +316,7 @@ mixins.home = {
                             0.0722 * corner[i + 2];
                     }
                     const lightness = luma / (corner.length / 4) / 255;
-                    const inkLight = lightness < HERO_INK_CUTOFF;
+                    const inkLight = !HERO_BAND && lightness < HERO_INK_CUTOFF;
                     document.body.style.setProperty(
                         "--hero-ink",
                         inkLight
