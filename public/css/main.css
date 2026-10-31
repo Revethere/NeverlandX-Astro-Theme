@@ -3323,28 +3323,32 @@ ol li {
     }
 }
 
-/* The rim a card catches while the pointer is over it. The card itself is
-   opaque, so a highlight cannot pass through it — but its edge is exactly where
-   light from outside would land. This paints a one-pixel ring over the card's
-   own border, brightest under the cursor and fading around the perimeter, and
-   gives that ring a drop-shadow so the bloom collects on the lit stretch
-   instead of glowing evenly. A masked ring is used rather than a border colour
-   because the gradient has to travel along the edge as the pointer moves. */
-.light-rim {
+/* The light a surface catches while the pointer is over it. A surface is
+   frosted, so a highlight poured over it would only wash its text out — but its
+   edge is exactly where light from outside would land. This paints a two-pixel
+   band over the surface's own border, brightest under the cursor and fading
+   along the perimeter.
+   The band is near-white rather than a strong tint: brightness is what reads as
+   light, and on a white card a coloured line only reads as a painted outline. A
+   little lavender is left in the two tails so the highlight belongs to the page's
+   palette, and a long three-stop falloff (no hard stop, no bloom) keeps the
+   change from jumping where the light ends.
+   A masked band is used rather than a border colour because the highlight has to
+   travel along the edge as the pointer moves. */
+.light-ring {
     background: radial-gradient(
-        260px circle at var(--sx, 50%) var(--sy, 50%),
-        rgba(214, 186, 246, 0.95),
-        rgba(178, 140, 224, 0.42) 48%,
-        rgba(178, 140, 224, 0) 78%
+        340px circle at var(--sx, 50%) var(--sy, 50%),
+        rgba(248, 243, 255, 0.92),
+        rgba(200, 170, 240, 0.40) 38%,
+        rgba(206, 178, 242, 0) 100%
     );
     border-radius: inherit;
-    filter: drop-shadow(0 0 6px rgba(178, 140, 224, 0.42));
     inset: 0;
     opacity: 0;
     padding: 2px;
     pointer-events: none;
     position: absolute;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.32s ease;
     z-index: 1;
     -webkit-mask:
         linear-gradient(#000 0 0) content-box,
@@ -3355,6 +3359,16 @@ ol li {
         linear-gradient(#000 0 0);
     mask-composite: exclude;
 }
-.light-hit > .light-rim {
+.light-hit > .light-ring {
     opacity: 1;
+}
+/* The small controls are only a few pixels thick: a two-pixel band would eat
+   their border, so the light runs as a hairline on those. */
+.archive-option > .light-ring,
+.article-toc-item > .light-ring,
+.collapse-arrow > .light-ring,
+.filter-toggle > .light-ring,
+.more-center > .light-ring,
+.page-current a > .light-ring {
+    padding: 1px;
 }
