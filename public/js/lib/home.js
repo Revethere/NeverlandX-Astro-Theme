@@ -15,23 +15,15 @@ const collapseMs = (px) => Math.min(600, Math.round(280 + px * 0.05));
 // nine wallpapers and would turn every build into a fresh diff.
 const TINT_SAMPLE_FROM = 0.7; // average only the bottom 30% of the wallpaper
 // Where the hero title sits, as fractions of the picture: [unused, top, width].
-// Where the type sits, as fractions of the picture: [unused, top, width], the
-// sample running from the top fraction to the bottom edge. It follows the
-// layout, because the ink has to match what is behind the words and not what is
-// behind a corner somewhere else: the corner style reads the lower-left block,
-// the rail reads the strip down the left edge it runs along.
-const HERO_LAYOUT = document.documentElement.dataset.hero || "corner";
-const HERO_INK_SAMPLE =
-    HERO_LAYOUT === "rail" ? [0, 0.12, 0.22] : [0, 0.58, 0.6];
+// Lower-left, roughly what #home-info occupies; sampled to pick the ink colour.
+// The type sits a little higher than it used to, so the sample starts higher too.
+const HERO_INK_SAMPLE = [0, 0.58, 0.6];
 // Above this average lightness the corner counts as light and the type goes dark,
 // but not as dark as the page's own ink: on a bright photo pure ink reads as a
 // sticker, so the light-corner ink is that ink mixed part of the way to white.
 const HERO_INK_CUTOFF = 0.58;
 const HERO_INK_DEEP = [30, 62, 63]; // #1e3e3f, the ink the rest of the page uses
 const HERO_INK_LIGHT_MIX = 0.34; // how far it leans to white on a bright corner
-// "band" puts the type on the paper under the picture rather than on the
-// picture, so there is nothing to sample: paper is paper.
-const HERO_BAND = document.documentElement.dataset.hero === "band";
 const mixInk = ([r, g, b], t) => {
   const channel = (value) => Math.round(value + (255 - value) * t);
   return `rgb(${channel(r)}, ${channel(g)}, ${channel(b)})`;
@@ -321,7 +313,7 @@ mixins.home = {
                             0.0722 * corner[i + 2];
                     }
                     const lightness = luma / (corner.length / 4) / 255;
-                    const inkLight = !HERO_BAND && lightness < HERO_INK_CUTOFF;
+                    const inkLight = lightness < HERO_INK_CUTOFF;
                     document.body.style.setProperty(
                         "--hero-ink",
                         inkLight
