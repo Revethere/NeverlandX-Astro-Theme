@@ -2,7 +2,13 @@
 /** The bar / drawer — a port of menu.ejs. */
 import { site, theme } from "../site.config.js";
 
-const entries = Object.entries(theme.menu);
+// The Moments entry only exists while the feature is on (theme.moments.enable).
+const momentsOn = theme.moments?.enable !== false;
+const pointsAtMoments = (entry) =>
+    entry.link?.startsWith("/moments") ||
+    Object.values(entry.children || {}).some((child) => child.link?.startsWith("/moments"));
+
+const entries = Object.entries(theme.menu).filter(([, entry]) => momentsOn || !pointsAtMoments(entry));
 ---
 
 <div id="menu">

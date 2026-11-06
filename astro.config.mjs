@@ -1,11 +1,17 @@
 import { defineConfig } from "astro/config";
 
 import autoBackgrounds from "./integrations/backgrounds.mjs";
+import optionalRoutes from "./integrations/optional-routes.mjs";
 
 export default defineConfig({
     // Ships only the wallpapers referenced by the sources, not every candidate
     // in public/images/background_*.webp. See integrations/backgrounds.mjs.
-    integrations: [autoBackgrounds()],
+    integrations: [
+        autoBackgrounds(),
+        // Moments are optional: their routes are injected only while
+        // theme.moments.enable is true. See integrations/optional-routes.mjs.
+        optionalRoutes(),
+    ],
     // The deployed origin. Only used to make absolute URLs absolute; every link
     // in the markup is root-relative, exactly like the Hexo build.
     site: "https://example.com",

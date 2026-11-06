@@ -9,8 +9,7 @@ import { site } from "../site.config.js";
 import { getPage } from "../lib/content.js";
 
 const page = getPage("moments");
-const title = `${page.headTitle || page.title} | ${site.title}`;
----
+const title = `${page.headTitle || page.title} | ${site.title}`;---
 
 <Base type="moments" title={title}>
     <Moments raw={page.raw} />

@@ -43,6 +43,10 @@ export const theme = {
     },
 
     moments: {
+        // Off hides /moments/ entirely: its page and feed chunks are not built and
+        // the menu entry disappears. The content file can stay where it is.
+        enable: true,
+
         note: "",
         entryAvatar: false,
         // Cloudflare Worker from worker/ that fetches metadata the browser cannot read

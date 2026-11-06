@@ -9,9 +9,9 @@
  * JSON payload keeps the markup in one place: an entry is always rendered by
  * `MomentEntry.astro`, whichever response it arrives in.
  */
-import MomentEntry from "../../../components/MomentEntry.astro";
-import { getPage } from "../../../lib/content.js";
-import { MOMENT_CHUNK_SIZE, getMoments, momentAnchors } from "../../../lib/moments.js";
+import MomentEntry from "../../components/MomentEntry.astro";
+import { getPage } from "../../lib/content.js";
+import { MOMENT_CHUNK_SIZE, getMoments, momentAnchors } from "../../lib/moments.js";
 
 export function getStaticPaths() {
     const entries = getMoments(getPage("moments").raw);

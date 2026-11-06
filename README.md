@@ -119,6 +119,8 @@ export const site = {
 
 `content/pages/logs.md` 每段日志以 `## DATE` 开头：
 
+朋友圈是一个可选功能：把 `src/site.config.js` 里 `theme.moments.enable` 改成 `false`，`/moments/` 和它的分页块都不会再生成，导航里的入口也一起消失；`content/pages/moments.md` 留在原处即可，想再打开把这一行改回 `true`。
+
 ```markdown
 ## 2026-01-01 // 写成 26.01.01 也行，根据内容渲染
 > what's new?
