@@ -1,3 +1,5 @@
+import { articleThemes } from "./article-themes.js";
+
 export const site = {
     title: "NeverlandX",
     subtitle: "",
@@ -28,18 +30,12 @@ export const theme = {
     menu: {
         Home: { name: "house", theme: "solid", link: "/" },
         About: { name: "id-card", theme: "solid", link: "/about/" },
+        Logs: { name: "scroll", theme: "solid", link: "/logs/" },
         Friends: { name: "user", theme: "solid", link: "/friends/" },
         Moments: { name: "images", theme: "solid", link: "/moments/" },
-        Archives: {
-            name: "box-archive",
-            theme: "solid",
-            link: "/archives/",
-            children: {
-                Logs: { link: "/logs/" },
-                Categories: { link: "/categories/" },
-                Tags: { link: "/tags/" },
-            },
-        },
+        // The archive page is the only browse view: tags and categories are
+        // filters in its search panel now, so the old group's children are gone.
+        Archives: { name: "box-archive", theme: "solid", link: "/archives/" },
     },
 
     moments: {
@@ -82,6 +78,10 @@ export const theme = {
         },
         daysSince: "2024-01-01",
     },
+
+    // Article themes live in src/article-themes.js; a post picks one with
+    // `theme: <name>` in its front matter, unknown names fall back to default.
+    articleThemes,
 
     footer: {
         since: 2024,
