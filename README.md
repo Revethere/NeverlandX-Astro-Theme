@@ -109,6 +109,7 @@ export const site = {
 
 - `toc`：是否开启文章右侧目录。目录支持跟踪当前标题、自动滚动活动目录项及跳转选定标题。
 - `outdated`：其值为 `true` 时首页不再渲染该文章，归档页搜索时带上 OUTDATE 标签。
+- `theme`：默认为 `default`，内置 `basic` 和 `math` 两个主题。支持各类功能的开关，并在 `src/article-themes.js` 中可自定义主题。
 
 已支持的扩展语法：
 
@@ -118,8 +119,6 @@ export const site = {
 ### 日志（Logs）
 
 `content/pages/logs.md` 每段日志以 `## DATE` 开头：
-
-朋友圈是一个可选功能：把 `src/site.config.js` 里 `theme.moments.enable` 改成 `false`，`/moments/` 和它的分页块都不会再生成，导航里的入口也一起消失；`content/pages/moments.md` 留在原处即可，想再打开把这一行改回 `true`。
 
 ```markdown
 ## 2026-01-01 // 写成 26.01.01 也行，根据内容渲染
@@ -175,6 +174,12 @@ moments: {
 ```
 
 由于 B 站 ban 了数据中心的 IP，因此卡片信息在每次构建时抓取并写入 `src/lib/bilibili-snapshot.json`。
+
+### 归档（Archives）
+
+将 `categories` 和 `tags` 页整合到搜索栏中。
+
+支持内容搜索。
 
 ## 许可
 
